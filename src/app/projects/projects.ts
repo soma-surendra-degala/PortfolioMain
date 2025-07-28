@@ -41,7 +41,7 @@ export class Projects {
 
   techStack: ['React.js', 'MongoDb', 'Node.js', 'Express.js'],
   github: 'https://github.com/soma-surendra-degala/WebStories',
-  live: 'https://web-stories-theta.vercel.app/',
+  live: 'https://webstories-frontend.onrender.com/',
   screenshot: 'assets/WebStories.png'
 }
 
