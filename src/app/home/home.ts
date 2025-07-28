@@ -1,0 +1,96 @@
+<<<<<<< HEAD
+import { Component, NgZone, OnInit, AfterViewInit } from '@angular/core';
+=======
+import { Component, NgZone, OnInit } from '@angular/core';
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { About } from '../about/about';
+import { Projects } from '../projects/projects';
+import { Contact } from '../contact/contact';
+import { ScrollRevealDirective } from '../scroll';
+import { CommonModule } from '@angular/common';
+import { Experience } from '../experience/experience';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+<<<<<<< HEAD
+  imports: [NgbModule, CommonModule, About, Projects, Experience, Contact, ScrollRevealDirective],
+  templateUrl: './home.html',
+  styleUrls: ['./home.css']
+})
+export class Home implements OnInit, AfterViewInit {
+  animate: boolean = false;
+
+  constructor(private route: ActivatedRoute, private router: Router, private ngZone: NgZone) {}
+
+  ngOnInit(): void {
+=======
+  imports: [NgbModule,CommonModule,About,Projects,Experience,Contact,ScrollRevealDirective],
+  templateUrl: './home.html',
+  styleUrls: ['./home.css']
+})
+export class Home {
+animate: boolean = false;
+
+constructor(private route: ActivatedRoute,private router:Router,private ngZone: NgZone) {}
+ ngOnInit(): void {
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+    this.route.queryParams.subscribe(params => {
+      const sectionId = params['scrollTo'];
+      if (sectionId) {
+        // Delay scroll to allow DOM to render
+        this.ngZone.runOutsideAngular(() => {
+          setTimeout(() => {
+            const element = document.getElementById(sectionId);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Remove query params from URL without reloading
+            this.ngZone.run(() => {
+              this.router.navigate([], {
+                queryParams: {},
+                replaceUrl: true,
+                relativeTo: this.route,
+              });
+            });
+
+          }, 100); // short delay for DOM ready
+        });
+      }
+    });
+  }
+
+<<<<<<< HEAD
+  ngAfterViewInit(): void {
+    // trigger h1 animation after component loads
+    setTimeout(() => {
+      this.animate = true;
+    }, 200);
+  }
+
+  scrollToProjects() {
+    this.router.navigate(['projects']);
+  }
+
+  scrollToSection(sectionId: string) {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+=======
+  scrollToProjects() {
+    this.router.navigate(['projects']);
+  }
+  scrollToSection(sectionId: string) {
+  const el = document.getElementById(sectionId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }}
+
+
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+}

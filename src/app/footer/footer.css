@@ -1,0 +1,97 @@
+.footer {
+  background: white;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+.textlogo {
+  font-family: "Bebas Neue", sans-serif;
+ font-weight: bold;
+  text-decoration: none;
+}
+.text-accent {
+    font-family: "Bebas Neue", sans-serif;
+  color: #0d6efd;
+}
+.footer-tagline {
+<<<<<<< HEAD
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Kill any cursor (like |) if present */
+.footer-tagline::after {
+  content: none !important;
+}
+.footer-tagline::after {
+  content: '|';
+  animation: blink 0.7s infinite;
+}
+
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+.footer-tagline {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid #333;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+=======
+  font-size: 0.9rem;
+  color: #000;
+  font-weight: 400;
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+}
+
+
+.social-icons a {
+  color: #333;
+  font-size: 1.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #0d6efd;
+  transform: scale(1.1);
+}
+
+.text-muted {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .footer-logo {
+    text-align: center;
+  }
+  .social-icons {
+    justify-content: center;
+  }
+}
+<<<<<<< HEAD
+
+
+.textlogo:hover {
+  transform: scale(1.1);
+}
+=======
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333

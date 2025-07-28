@@ -1,0 +1,15 @@
+<app-header></app-header>
+<div class="floating-icons">
+  <i class="bi bi-house"  data-bs-toggle="tooltip" title="Home" (click)="goToSection('home')"></i>
+  <i class="bi bi-person"  data-bs-toggle="tooltip" title="About" (click)="goToSection('about')"></i>
+  <i class="bi bi-code-slash" data-bs-toggle="tooltip" title="Projects" (click)="goToSection('projects')"></i>
+  <i class="bi bi-journal-bookmark"  data-bs-toggle="tooltip" title="Experience"(click)="goToSection('experience')"></i>
+  <i class="bi bi-envelope" data-bs-toggle="tooltip" title="Contact" (click)="goToSection('contact')"></i>
+<<<<<<< HEAD
+  <a href="assets/Resume.pdf"  data-bs-toggle="tooltip" title="Resume" target="_blank"><i class="bi bi-download text-dark"></i></a>
+=======
+  <a href="assets/Resume.pdf"  data-bs-toggle="tooltip" title="Resume" target="_blank"><i class="bi bi-download"></i></a>
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+</div>
+<router-outlet></router-outlet>
+<app-footer></app-footer>

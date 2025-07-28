@@ -1,0 +1,152 @@
+* {
+    margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'm', 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+    width: 100%;
+  overflow-x: hidden;
+  background-color: #fff;
+  color: #212529;
+}
+.fade-slide {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-slide.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+a,
+button {
+  transition: all 0.3s ease-in-out;
+}
+
+a:hover,
+button:hover {
+  transform: scale(1.05);
+  color: #0d6efd;
+}
+
+<<<<<<< HEAD
+.hover-zoom-img {
+  transition: all 0.4s ease; /* keep smooth transition */
+  transform: none;
+  filter: none;
+}
+
+=======
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+/* Base reveal */
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, transform;
+}
+
+/* Triggered by directive */
+.show {
+  opacity: 1;
+  transform: none;
+}
+
+/* Directional styles */
+.fade-left { transform: translateX(-60px); }
+.fade-right { transform: translateX(60px); }
+.fade-up { transform: translateY(40px); }
+.fade-down { transform: translateY(-40px); }
+
+/* Optional stagger */
+.stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.stagger.show > * {
+  opacity: 1;
+  transform: none;
+}
+
+.stagger > *:nth-child(1) { transition-delay: 0.1s; }
+.stagger > *:nth-child(2) { transition-delay: 0.2s; }
+.stagger > *:nth-child(3) { transition-delay: 0.3s; }
+
+
+* Hero & About Container Tweaks *
+.container.hero {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 100%;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.col-md-6 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Cards */
+.card {
+  font-size: 0.9rem;
+}
+
+/* Text Overflow Fixes */
+.text-box h1,
+.text-box p {
+  word-wrap: break-word;
+}
+
+/* Tags */
+.tag {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .text-box h1 {
+    font-size: 1.4rem;
+  }
+  .text-box p {
+    font-size: 0.9rem;
+  }
+}
+
+span {
+  opacity: 0;
+  display: inline-block;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+<<<<<<< HEAD
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+=======
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333

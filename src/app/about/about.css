@@ -1,0 +1,228 @@
+.hero {
+<<<<<<< HEAD
+  margin: 0px 10px;
+=======
+    margin: 0px 10px;
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+
+  .text-box {
+    h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+<<<<<<< HEAD
+      transition: transform 0.3s ease, color 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        color: #000;
+      }
+    }
+/* 
+    p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      transition: transform 0.3s ease, color 0.3s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        color: #444;
+      }
+    } */
+
+.lead {
+  font-size: 1.3rem;
+  font-style: italic;
+  font-weight: 400;
+  color: #555;
+  max-width: 700px;     /* Keeps it from stretching too wide */
+  margin: 0 auto 2rem;  /* Centers it horizontally */
+  line-height: 1.6;
+}
+
+=======
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #999;
+    }
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+  }
+
+  .img-box {
+    position: relative;
+
+    .img-wrapper {
+      position: relative;
+      display: inline-block;
+
+      img {
+        max-width: 300px;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+<<<<<<< HEAD
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+        &:hover {
+          transform: scale(1.08) translateY(-5px);
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+        }
+=======
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+      }
+    }
+  }
+
+  .card {
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
+
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      color: #555;
+    }
+  }
+}
+<<<<<<< HEAD
+
+.about {
+  font-size: 25px;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      color: #000;
+    }
+  }
+
+  /* p {
+    font-size: 1rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      color: #444;
+    }
+  } */
+
+  .img-box {
+    .img-wrapper {
+      img {
+        max-width: 280px;
+        border-radius: 12px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+        &:hover {
+          transform: scale(1.08) translateY(-5px);
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .hero {
+    flex-direction: column;
+    position: relative;
+
+    .lead {
+      position: relative;
+    }
+
+    .text-box {
+      position: relative;
+      right: 70px;
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .card {
+      width: 100%;
+    }
+  }
+}
+=======
+.about{
+    font-size: 25px;
+}
+
+@media (max-width: 576px) {
+  .hero{
+    flex-direction: column;
+    position: relative;
+    left: 45px;
+    .lead{
+    position: relative;
+    right: 45px;
+    }
+  
+  .text-box {
+    h1{
+      font-size: 2rem;
+    }
+    position: relative;
+    right: 120px;
+  }
+
+  .card {
+    width: 100%;
+  }
+}
+}
+
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+
+.text-box h1 {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease-out;
+<<<<<<< HEAD
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logotext {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: bold;
+}
+=======
+}
+
+.text-box h1.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+.logotext{
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: bold;
+}
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333

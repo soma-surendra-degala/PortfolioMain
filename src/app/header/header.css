@@ -1,0 +1,115 @@
+.header {
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+<<<<<<< HEAD
+/* Header Logo Text */
+.logotext {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: bold;
+  font-size: 2.2rem;
+  color: #333;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+
+/* Hover Effect */
+.logotext:hover {
+  color: #0d6efd; /* accent blue */
+  transform: scale(1.1);
+  letter-spacing: 1.5px;
+}
+
+=======
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+
+.navlinks a {
+  text-decoration: none;
+  color: #BBBAC1;
+  font-weight: 500;
+}
+
+.navlinks a:hover {
+  color: #000;
+}
+
+.resume {
+  font-weight: 600;
+  text-decoration: none;
+}
+<<<<<<< HEAD
+.resume:hover {
+  transform: translateY(-3px) scale(1.05);
+  color: #000;
+  font-weight: bold;
+  font-size: large;
+}
+=======
+>>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+a.active {
+  color: black;
+  font-weight: bold;
+  border-bottom: 2px solid #BBBAC1;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.mobile-dropdown {
+  right: 0;
+  top: 100%;
+  width: max-content;
+  min-width: 150px;
+  z-index: 999;
+  animation: dropdownFade 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .navlinks {
+    display: none !important;
+    color: #333;
+  }
+
+  .mobile-dropdown {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    text-align: right;
+  }
+
+  .mobile-dropdown a {
+    display: block;
+    padding: 0.4rem 0;
+    white-space: nowrap;
+    text-decoration: none;
+    color: inherit;
+    color: #333; 
+  }
+  .mobile-dropdown a.active {
+    color: #333 !important; 
+
+  }
+   .mobile-dropdown a:hover {
+    color: black !important; 
+  }
+}
+
+/* Re-enable nav links in desktop */
+@media (min-width: 769px) {
+  .navlinks {
+    display: flex !important;
+  }
+}
+
+.logotext a{
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
+}
