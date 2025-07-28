@@ -125,6 +125,7 @@
   .hero {
     flex-direction: column;
     position: relative;
+    right: 5px;
 
     .lead {
       position: relative;
