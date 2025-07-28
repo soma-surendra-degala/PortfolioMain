@@ -174,7 +174,7 @@
     display: block;
     margin-top: 0;
     position: relative;
-    right: 15px;
+    right: 10px;
   }
   h1 {
     margin: 0%;
@@ -197,7 +197,7 @@
   }
   .nodejs{
      top: 50%;
-  right: -80px;
+  right: -90px;
   transform: translateY(-50%);
 
   }
