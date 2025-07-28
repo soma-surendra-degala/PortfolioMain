@@ -6,11 +6,6 @@
   line-height: 1.6;
   letter-spacing: 0.3px;
 }
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 .textlogo {
   font-family: "Bebas Neue", sans-serif;
  font-weight: bold;
@@ -21,7 +16,6 @@
   color: #0d6efd;
 }
 .footer-tagline {
-<<<<<<< HEAD
   font-size: 1.2rem;
   font-weight: 500;
   color: #333;
@@ -55,11 +49,6 @@
 
 @keyframes blink {
   50% { border-color: transparent; }
-=======
-  font-size: 0.9rem;
-  color: #000;
-  font-weight: 400;
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 }
 
 
@@ -87,11 +76,7 @@
     justify-content: center;
   }
 }
-<<<<<<< HEAD
-
-
 .textlogo:hover {
   transform: scale(1.1);
 }
-=======
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+

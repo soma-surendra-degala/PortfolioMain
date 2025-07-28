@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -35,16 +34,4 @@ export class Footer implements OnInit {
       }
     }, 120); // speed
   }
-=======
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-footer',
-  imports: [],
-  templateUrl: './footer.html',
-  styleUrl: './footer.css'
-})
-export class Footer {
-  currentYear: number = new Date().getFullYear();
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 }

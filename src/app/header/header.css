@@ -2,7 +2,6 @@
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
-<<<<<<< HEAD
 /* Header Logo Text */
 .logotext {
   font-family: "Bebas Neue", sans-serif;
@@ -21,8 +20,6 @@
   letter-spacing: 1.5px;
 }
 
-=======
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 
 .navlinks a {
   text-decoration: none;
@@ -38,15 +35,12 @@
   font-weight: 600;
   text-decoration: none;
 }
-<<<<<<< HEAD
 .resume:hover {
   transform: translateY(-3px) scale(1.05);
   color: #000;
   font-weight: bold;
   font-size: large;
 }
-=======
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 a.active {
   color: black;
   font-weight: bold;

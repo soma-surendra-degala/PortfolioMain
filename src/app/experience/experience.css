@@ -31,7 +31,6 @@
   border: 3px solid #fff;
   box-shadow: 0 0 0 2px #000;
 }
-<<<<<<< HEAD
 .timeline-content h5 {
   font-size: 1.3rem;
   font-weight: 600;
@@ -70,36 +69,6 @@
   letter-spacing: 0.5px;
 }
 
-
-=======
-
-.timeline-content h5 {
-  font-size: 1.2rem;
-  margin-bottom: 4px;
-  font-weight: 600;
-  color: #333;
-}
-
-.timeline-content .company {
-  font-weight: normal;
-  color: #777;
-  font-size: 1rem;
-  margin-left: 8px;
-}
-
-.timeline-content small {
-  color: #888;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.timeline-content p {
-  color: #444;
-  margin-bottom: 0;
-  line-height: 1.5;
-}
-
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 /* Mobile View */
 @media (max-width: 768px) {
   .row {

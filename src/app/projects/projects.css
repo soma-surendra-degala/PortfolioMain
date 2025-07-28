@@ -36,11 +36,7 @@
   align-items: flex-start;
 
   font-size: 0.85rem;
-<<<<<<< HEAD
   gap: 0.3rem;
-=======
-  gap: 0.4rem;
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 }
 
 .project-card:hover .overlay {

@@ -34,15 +34,12 @@ button:hover {
   color: #0d6efd;
 }
 
-<<<<<<< HEAD
 .hover-zoom-img {
   transition: all 0.4s ease; /* keep smooth transition */
   transform: none;
   filter: none;
 }
 
-=======
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
 /* Base reveal */
 .fade-in {
   opacity: 0;
@@ -143,10 +140,8 @@ span {
   }
 }
 
-<<<<<<< HEAD
 html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
-=======
->>>>>>> 6c71592c5d2bd5fdc12de3fe6abf23e57a7a5333
+
