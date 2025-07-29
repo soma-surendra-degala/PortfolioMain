@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Contact } from '../contact/contact';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../auth';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +15,16 @@ export class Header {
 
     toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+   constructor(private authService: AuthService, private router: Router) {}
+
+  isLoggedIn(): boolean {
+    return this.authService.getAuthStatus();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/home']);
   }
 
 

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { Header } from './header/header';
-import { Footer } from './footer/footer';
+import { Footer } from './Components/footer/footer';
+import { Header } from './Components/header/header';
 import { ScrollRevealDirective } from './scroll';
 declare var bootstrap: any;
 

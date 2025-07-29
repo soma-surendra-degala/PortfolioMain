@@ -4,7 +4,11 @@
     <div class="d-flex justify-content-between align-items-center flex-wrap">
 
       <!-- Logo -->
-      <div class="logotext fw-bold fs-1"><a routerLink="/home"> Surendra</a></div>
+      <div class="logotext fw-bold fs-1">
+        <a *ngIf="!isLoggedIn()" routerLink="/login"> Surendra</a>
+        <a *ngIf="isLoggedIn()" (click)="logout()" style="cursor: pointer;"> Surendra</a>
+      </div>
+
 
       <!-- Resume -->
       <div>

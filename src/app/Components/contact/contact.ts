@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ScrollRevealDirective } from '../scroll';
+import { ScrollRevealDirective } from '../../scroll';
+
 
 @Component({
   selector: 'app-contact',

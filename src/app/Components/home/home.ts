@@ -4,9 +4,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { About } from '../about/about';
 import { Projects } from '../projects/projects';
 import { Contact } from '../contact/contact';
-import { ScrollRevealDirective } from '../scroll';
 import { CommonModule } from '@angular/common';
 import { Experience } from '../experience/experience';
+import { ScrollRevealDirective } from '../../scroll';
 
 @Component({
   selector: 'app-home',
