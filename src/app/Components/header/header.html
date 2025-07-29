@@ -5,7 +5,7 @@
 
       <!-- Logo -->
       <div class="logotext fw-bold fs-1">
-        <a *ngIf="!isLoggedIn()" routerLink="/login"> Surendra</a>
+        <a *ngIf="!isLoggedIn()" routerLink="/login">Surendra</a>
         <a *ngIf="isLoggedIn()" (click)="logout()" style="cursor: pointer;"> Surendra</a>
       </div>
 
@@ -25,6 +25,8 @@
         <a routerLink="/experience" routerLinkActive="active">Experience</a>
         <a routerLink="/contact" routerLinkActive="active">Contact</a>
       </nav>
+    
+
 
       <!-- Hamburger (mobile only) -->
       <div class="mobile-menu-container position-relative d-md-none">

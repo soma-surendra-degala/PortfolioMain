@@ -3,13 +3,14 @@ import { Router, RouterOutlet } from '@angular/router';
 import { Footer } from './Components/footer/footer';
 import { Header } from './Components/header/header';
 import { ScrollRevealDirective } from './Directive/scroll';
+import { HttpClientModule } from '@angular/common/http';
 
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Header,Footer,ScrollRevealDirective],
+  imports: [RouterOutlet,Header,Footer,HttpClientModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

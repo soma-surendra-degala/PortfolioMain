@@ -1,18 +1,11 @@
 
-.admin-container h2 {
-  font-weight: bold;
-  color: #333;
+.container {
+  max-width: 600px;
 }
-
-.card {
+.alert {
   border-radius: 12px;
+  font-size: 1.1rem;
 }
-
-.table a {
+a{
   text-decoration: none;
-  color: #007bff;
-}
-
-.table a:hover {
-  text-decoration: underline;
 }
