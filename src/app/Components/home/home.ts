@@ -6,7 +6,8 @@ import { Projects } from '../projects/projects';
 import { Contact } from '../contact/contact';
 import { CommonModule } from '@angular/common';
 import { Experience } from '../experience/experience';
-import { ScrollRevealDirective } from '../../scroll';
+import { ScrollRevealDirective } from '../../Directive/scroll';
+
 
 @Component({
   selector: 'app-home',

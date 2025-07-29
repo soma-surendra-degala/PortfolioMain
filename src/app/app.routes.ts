@@ -5,7 +5,7 @@ import { Projects } from './Components/projects/projects';
 import { Experience } from './Components/experience/experience';
 import { Contact } from './Components/contact/contact';
 import { Admin } from './Components/admin/admin';
-import { AuthGuard } from './auth-guard';
+import { AuthGuard } from './Guard/auth-guard';
 import { Login } from './Components/login/login';
 
 

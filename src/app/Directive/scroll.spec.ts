@@ -1,4 +1,4 @@
-import { Scroll } from './scroll';
+import { ScrollRevealDirective } from './scroll';
 
 describe('Scroll', () => {
   it('should create an instance', () => {

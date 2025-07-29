@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Footer } from './Components/footer/footer';
 import { Header } from './Components/header/header';
-import { ScrollRevealDirective } from './scroll';
+import { ScrollRevealDirective } from './Directive/scroll';
+
+
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Header,Footer],
+  imports: [RouterOutlet,Header,Footer,ScrollRevealDirective],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

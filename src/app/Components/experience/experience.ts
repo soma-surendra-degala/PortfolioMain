@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ScrollRevealDirective } from '../../scroll';
+import { ScrollRevealDirective } from '../../Directive/scroll';
+
 
 
 @Component({
