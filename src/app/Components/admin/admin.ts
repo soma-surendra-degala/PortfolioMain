@@ -2,14 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Loader } from '../loader/loader';  // ✅ Import Loader
 
 @Component({
   selector: 'app-admin',
-  imports: [FormsModule, CommonModule, HttpClientModule],
+  standalone: true,
+  imports: [FormsModule, CommonModule, HttpClientModule, Loader], // ✅ Add Loader here
   templateUrl: './admin.html',
   styleUrls: ['./admin.css']
 })
 export class Admin implements OnInit {
+  loading: boolean = true;  // ✅ For showing loader
+
   header = {
     firstName: '',
     middleName: '',
@@ -58,6 +62,12 @@ export class Admin implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    this.fetchAdminData();
+  }
+
+  // ✅ Function to fetch admin data
+  fetchAdminData() {
+    this.loading = true;
     this.http.get<any>('http://localhost:5000/admin/header').subscribe({
       next: (data) => {
         if (data) {
@@ -71,8 +81,12 @@ export class Admin implements OnInit {
           this.experiences = data.experiences?.length ? data.experiences : this.experiences;
           this.projects = data.projects?.length ? data.projects : this.projects;
         }
+        this.loading = false;  // ✅ Hide loader after data loads
       },
-      error: (err) => console.error('❌ Failed to load header:', err)
+      error: (err) => {
+        console.error('❌ Failed to load header:', err);
+        this.loading = false;  // ✅ Hide loader even on error
+      }
     });
   }
 
@@ -95,18 +109,10 @@ export class Admin implements OnInit {
   }
 
   // Skills
-  addSkill1() {
-    this.skills1.push('');
-  }
-  removeSkill1(index: number) {
-    this.skills1.splice(index, 1);
-  }
-  addSkill2() {
-    this.skills2.push('');
-  }
-  removeSkill2(index: number) {
-    this.skills2.splice(index, 1);
-  }
+  addSkill1() { this.skills1.push(''); }
+  removeSkill1(index: number) { this.skills1.splice(index, 1); }
+  addSkill2() { this.skills2.push(''); }
+  removeSkill2(index: number) { this.skills2.splice(index, 1); }
 
   // Education
   addEducation() {
@@ -134,6 +140,7 @@ export class Admin implements OnInit {
 
   // Save
   onSave(): void {
+    this.loading = true;  // ✅ Show loader when saving
     const formData = new FormData();
 
     Object.entries(this.header).forEach(([key, value]) =>
@@ -161,8 +168,14 @@ export class Admin implements OnInit {
     });
 
     this.http.post('http://localhost:5000/admin/header', formData).subscribe({
-      next: () => alert('✅ Portfolio updated successfully'),
-      error: () => alert('❌ Failed to save portfolio')
+      next: () => {
+        alert('✅ Portfolio updated successfully');
+        this.loading = false;
+      },
+      error: () => {
+        alert('❌ Failed to save portfolio');
+        this.loading = false;
+      }
     });
   }
 }

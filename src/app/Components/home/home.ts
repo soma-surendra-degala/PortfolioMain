@@ -8,34 +8,47 @@ import { CommonModule } from '@angular/common';
 import { Experience } from '../experience/experience';
 import { ScrollRevealDirective } from '../../Directive/scroll';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-
+import { Loader } from '../loader/loader'; // ✅ import loader
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgbModule, CommonModule, About, Projects, Experience, Contact, ScrollRevealDirective,HttpClientModule],
+  imports: [
+    NgbModule, 
+    CommonModule, 
+    About, 
+    Projects, 
+    Experience, 
+    Contact, 
+    ScrollRevealDirective, 
+    HttpClientModule,
+    Loader // ✅ add loader
+  ],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
 export class Home implements OnInit, AfterViewInit {
   animate: boolean = false;
   header: any = null;
+  loading: boolean = true; // ✅ add loader state
 
-  constructor(private route: ActivatedRoute, private router: Router, private ngZone: NgZone,private http:HttpClient) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private ngZone: NgZone,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const sectionId = params['scrollTo'];
       if (sectionId) {
-        // Delay scroll to allow DOM to render
         this.ngZone.runOutsideAngular(() => {
           setTimeout(() => {
             const element = document.getElementById(sectionId);
             if (element) {
               element.scrollIntoView({ behavior: 'smooth' });
             }
-
-            // Remove query params from URL without reloading
             this.ngZone.run(() => {
               this.router.navigate([], {
                 queryParams: {},
@@ -43,21 +56,25 @@ export class Home implements OnInit, AfterViewInit {
                 relativeTo: this.route,
               });
             });
-
-          }, 100); // short delay for DOM ready
+          }, 100);
         });
       }
     });
 
+    // ✅ Load header data
     this.http.get('http://localhost:5000/header').subscribe({
-      next: (data) => this.header = data,
-      error: (err) => console.error('❌ Failed to load header data', err)
+      next: (data) => {
+        this.header = data;
+        this.loading = false; // ✅ hide loader after data load
+      },
+      error: (err) => {
+        console.error('❌ Failed to load header data', err);
+        this.loading = false; // even on error, hide loader
+      }
     });
-
-}
+  }
 
   ngAfterViewInit(): void {
-    // trigger h1 animation after component loads
     setTimeout(() => {
       this.animate = true;
     }, 200);
@@ -73,5 +90,4 @@ export class Home implements OnInit, AfterViewInit {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   }
-
 }
