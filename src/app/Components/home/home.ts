@@ -29,7 +29,7 @@ import { Loader } from '../loader/loader'; // ✅ import loader
 })
 export class Home implements OnInit, AfterViewInit {
   animate: boolean = false;
-  header: any = null;
+  home: any = null;
   loading: boolean = true; // ✅ add loader state
 
   constructor(
@@ -62,13 +62,13 @@ export class Home implements OnInit, AfterViewInit {
     });
 
     // ✅ Load header data
-    this.http.get('http://localhost:5000/header').subscribe({
+    this.http.get('http://localhost:5000/home').subscribe({
       next: (data) => {
-        this.header = data;
+        this.home = data;
         this.loading = false; // ✅ hide loader after data load
       },
       error: (err) => {
-        console.error('❌ Failed to load header data', err);
+        console.error('❌ Failed to load home data', err);
         this.loading = false; // even on error, hide loader
       }
     });

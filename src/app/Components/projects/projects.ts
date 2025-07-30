@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollRevealDirective } from '../../Directive/scroll';
 
-
-
 @Component({
   selector: 'app-projects',
   standalone: true,
