@@ -234,8 +234,16 @@
           <textarea class="form-control" [(ngModel)]="project.projectDescription" name="projectDescription{{i}}" rows="3"></textarea>
         </div>
 
-  
-
+        <!-- <div class="mb-3">
+            <label class="form-label">Project Skills</label>
+            <div *ngFor="let skill of project.projectSkills; let j = index" class="d-flex mb-2">
+              <input type="text" class="form-control me-2" [(ngModel)]="project.projectSkills[j]" name="projectSkill{{i}}{{j}}">
+              <button type="button" class="btn btn-danger btn-sm" (click)="removeProjectSkill(i, j)" *ngIf="project.projectSkills.length > 1">✖</button>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm mt-2" (click)="addProjectSkill(i)">
+              + Add Skill
+            </button>
+          </div> -->
 
         <button type="button" class="btn btn-danger btn-sm" (click)="removeProject(i)">✖ Remove Project</button>
       </div>

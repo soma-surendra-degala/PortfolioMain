@@ -81,10 +81,22 @@ addProject() {
     projectName: '',
     projectType: '',
     projectDescription: '',
-    projectSkills: '',
+    projectSkills: [''],  // ✅ initialized
     screenshot: null
   });
 }
+
+addProjectSkill(projectIndex: number) {
+  this.projects[projectIndex].projectSkills.push('');
+}
+
+removeProjectSkill(projectIndex: number, skillIndex: number) {
+  if (this.projects[projectIndex].projectSkills.length > 1) {
+    this.projects[projectIndex].projectSkills.splice(skillIndex, 1);
+  }
+}
+
+
 
 removeProject(index: number) {
   if (this.projects.length > 1) {
