@@ -30,7 +30,13 @@
       </div>
         <div class="mb-3">
           <label class="form-label">Profile Picture</label>
-          <input type="file" class="form-control" (change)="onFileSelected($event, 'profilePic')" accept="image/*">
+          <input 
+            type="file" 
+            class="form-control"
+            name="profilePic" 
+            (change)="onFileSelected($event, 'profilePic')" 
+            accept="image/*">
+
           <!-- Show preview -->
         <div *ngIf="profilePicPreview" class="mt-3">
           <img [src]="profilePicPreview" alt="Profile Preview" class="img-thumbnail" width="150">
@@ -64,7 +70,13 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Upload About Picture</label>
-          <input type="file" class="form-control" (change)="onFileSelected($event, 'aboutPic')" accept="image/*">
+                  <input 
+  type="file" 
+  class="form-control"
+  name="aboutPic" 
+  (change)="onFileSelected($event, 'aboutPic')" 
+  accept="image/*">
+
         </div>
           <!-- Show preview -->
         <div *ngIf="aboutPicPreview" class="mt-3">
@@ -165,7 +177,7 @@
             <input type="text" class="form-control" [(ngModel)]="edu.endYear" name="endYear{{i}}">
           </div>
           <div class="col-md-4">
-            <label>Grade/CGPA</label>
+            <label>Grade/CGPA/Marks</label>
             <input type="text" class="form-control" [(ngModel)]="edu.grade" name="grade{{i}}">
           </div>
         </div>
@@ -190,10 +202,6 @@
           <input type="text" class="form-control" [(ngModel)]="exp.company" name="company{{i}}">
         </div>
         <div class="row g-3">
-          <div class="col-md-6">
-            <label>Duration</label>
-            <input type="text" class="form-control" [(ngModel)]="exp.duration" name="duration{{i}}">
-          </div>
           <div class="col-md-6">
             <label>Location</label>
             <input type="text" class="form-control" [(ngModel)]="exp.location" name="location{{i}}">
@@ -234,17 +242,36 @@
           <textarea class="form-control" [(ngModel)]="project.projectDescription" name="projectDescription{{i}}" rows="3"></textarea>
         </div>
 
-        <!-- <div class="mb-3">
-            <label class="form-label">Project Skills</label>
-            <div *ngFor="let skill of project.projectSkills; let j = index" class="d-flex mb-2">
-              <input type="text" class="form-control me-2" [(ngModel)]="project.projectSkills[j]" name="projectSkill{{i}}{{j}}">
-              <button type="button" class="btn btn-danger btn-sm" (click)="removeProjectSkill(i, j)" *ngIf="project.projectSkills.length > 1">✖</button>
-            </div>
-            <button type="button" class="btn btn-primary btn-sm mt-2" (click)="addProjectSkill(i)">
-              + Add Skill
-            </button>
-          </div> -->
+          <!-- Project Screenshot -->
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Project Screenshot</label>
+    <input type="file" 
+       class="form-control" 
+       accept="image/*" 
+       (change)="onFileSelected($event, 'projectScreenshot', i)">
 
+    
+    <!-- Preview -->
+    <div *ngIf="project.screenshotPreview" class="mt-3">
+      <img [src]="project.screenshotPreview"
+           alt="Project Screenshot"
+           class="img-thumbnail"
+           width="200">
+    </div>
+  </div>
+<div *ngFor="let skill of project.projectSkills; let k = index,trackBy: trackByIndex" class="input-group mb-2">
+  <input type="text" class="form-control"
+         [(ngModel)]="project.projectSkills[k]"
+         name="projectSkill{{i}}{{k}}" placeholder="Skill {{k+1}}">
+  <button type="button" class="btn btn-danger"
+          (click)="removeProjectSkill(i, k)"
+          *ngIf="project.projectSkills.length > 1">✖</button>
+</div>
+<button type="button" class="btn btn-sm btn-primary mb-3" (click)="addProjectSkill(i)">
+  <i class="bi bi-plus-lg"></i> Add Project Skill
+</button>
+
+<br>
         <button type="button" class="btn btn-danger btn-sm" (click)="removeProject(i)">✖ Remove Project</button>
       </div>
 

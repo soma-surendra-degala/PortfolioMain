@@ -39,8 +39,9 @@ const portfolioSchema = new mongoose.Schema({
     {
       projectName: String,
       projectType: String,
+      projectSkills: [String],
       projectDescription: String,
-      profilePic: String
+      screenshot: String
     }
   ],
   aboutPic: String,

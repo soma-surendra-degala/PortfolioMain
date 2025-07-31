@@ -5,6 +5,16 @@ import { Loader } from '../loader/loader';
 import { Portfolio } from '../../Services/portfolio';
 import { HttpClientModule } from '@angular/common/http';
 
+interface Project {
+  projectName: string;
+  projectType: string;
+  projectDescription: string;
+  projectSkills: string[];
+  screenshot?: File | null;
+  screenshotPreview?: string;
+}
+
+
 
 @Component({
   selector: 'app-admin',
@@ -62,11 +72,11 @@ export class Admin implements OnInit {
   ];
 
   experiences: any[] = [
-    { jobTitle: '', company: '', duration: '', location: '', description: '' }
+    { jobTitle: '', company: '', location: '', description: '' }
   ];
 
   projects: any[] = [
-    { projectName: '', projectType: '', projectDescription: '', projectSkills: '', screenshot: null }
+    { projectName: '', projectType: '', projectDescription: '', projectSkills: [''], screenshot: null }
   ];
 
   resumeFile: File | null = null;
@@ -74,29 +84,35 @@ export class Admin implements OnInit {
   aboutPicFile: File | null = null;
   profilePicPreview: string | ArrayBuffer | null = null;
   aboutPicPreview: string | ArrayBuffer | null = null;
+   screenshot:  File | null = null;
+    screenshotPreview: string | ArrayBuffer | null = null;
 
-  // ✅ Projects
+
 addProject() {
   this.projects.push({
     projectName: '',
     projectType: '',
     projectDescription: '',
-    projectSkills: [''],  // ✅ initialized
-    screenshot: null
+    projectSkills: [''],
+    screenshot: null,          // store file
+      screenshotPreview: ''      
   });
 }
-
 addProjectSkill(projectIndex: number) {
+  if (!Array.isArray(this.projects[projectIndex].projectSkills)) {
+    this.projects[projectIndex].projectSkills = [];
+  }
   this.projects[projectIndex].projectSkills.push('');
 }
-
 removeProjectSkill(projectIndex: number, skillIndex: number) {
-  if (this.projects[projectIndex].projectSkills.length > 1) {
+  if (
+    this.projects[projectIndex].projectSkills &&
+    this.projects[projectIndex].projectSkills.length > 1
+  ) {
     this.projects[projectIndex].projectSkills.splice(skillIndex, 1);
   }
+
 }
-
-
 
 removeProject(index: number) {
   if (this.projects.length > 1) {
@@ -108,7 +124,6 @@ removeProject(index: number) {
     this.experiences.push({
       jobTitle: '',
       company: '',
-      duration: '',
       location: '',
       description: ''
     });
@@ -154,44 +169,56 @@ removeProject(index: number) {
           this.skills2 = data.skills2?.length ? data.skills2 : this.skills2;
           this.education = data.education?.length ? data.education : this.education;
           this.experiences = data.experiences?.length ? data.experiences : this.experiences;
-          this.projects = data.projects?.length ? data.projects : this.projects;
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('❌ Failed to load portfolio', err);
-        this.loading = false;
+         this.projects = data.projects?.length
+  ? data.projects.map((p: any) => ({
+      projectName: p.projectName || '',
+      projectType: p.projectType || '',
+      projectDescription: p.projectDescription || '',
+      projectSkills: Array.isArray(p.projectSkills) ? p.projectSkills : [''], // <-- FIX
+      screenshot: null,
+      screenshotPreview: ''
+    }))
+  : this.projects;
+
       }
-    });
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error('❌ Failed to load portfolio', err);
+      this.loading = false;
+    }
+  });
+}
+
+ onFileSelected(event: any, type: string, index?: number) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (type === 'resume') {
+    this.resumeFile = file;
   }
 
-  // ✅ Handle File Upload
-  onFileSelected(event: any, type: string, index?: number) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (type === 'resume') this.resumeFile = file;
-    if (type === 'profilePic') {
-      this.profilePicFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => (this.profilePicPreview = e.target?.result || null);
-      reader.readAsDataURL(file);
-    }
-    if (type === 'aboutPic') 
-      {
-      this.aboutPicFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => (this.aboutPicPreview = e.target?.result || null);
-      reader.readAsDataURL(file);
-    }
-    if (type === 'projectScreenshot' && index !== undefined) {
-      // this.projectScreenshot = file;
-      // const reader = new FileReader();
-      // reader.onload = (e) => (this.projectScreenshot = e.target?.result || null);
-      // reader.readAsDataURL(file);
-      this.projects[index].screenshot = file;
-    }
+  if (type === 'profilePic') {
+    this.profilePicFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => (this.profilePicPreview = e.target?.result || null);
+    reader.readAsDataURL(file);
   }
+
+  if (type === 'aboutPic') {
+    this.aboutPicFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => (this.aboutPicPreview = e.target?.result || null);
+    reader.readAsDataURL(file);
+  }
+
+  if (type === 'projectScreenshot' && index !== undefined) {
+    this.projects[index].screenshot = file;
+    const reader = new FileReader();
+    reader.onload = (e) => (this.projects[index].screenshotPreview = e.target?.result || null);
+    reader.readAsDataURL(file);
+  }
+}
 
   // ✅ Save Data
   onSave() {
@@ -204,11 +231,13 @@ removeProject(index: number) {
     formData.append('skills2', JSON.stringify(this.skills2));
     formData.append('education', JSON.stringify(this.education));
     formData.append('experiences', JSON.stringify(this.experiences));
+    
     formData.append('projects', JSON.stringify(this.projects.map((p) => {
       const proj = { ...p };
       if (proj.screenshot instanceof File) proj.screenshot = '';
       return proj;
     })));
+    
 
     if (this.resumeFile) formData.append('resume', this.resumeFile);
     if (this.profilePicFile) formData.append('profilePic', this.profilePicFile);
