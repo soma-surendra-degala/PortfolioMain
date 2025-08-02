@@ -33,7 +33,7 @@ export class Home implements OnInit, AfterViewInit {
   loading: boolean = true;
   skills: string[] = [];
   apiUrl = 'https://portfoliomain-sbsy.onrender.com'; // ✅ Replace with your Render backend URL
-
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,

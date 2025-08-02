@@ -36,18 +36,16 @@
         <!-- Right -->
         <div class="col-md-6 img-box mt-md-0 fade-in fade-right" appScrollReveal>
           <div class="img-wrapper stagger" appScrollReveal>
-            <picture>
-              <ng-container *ngIf="home.profilePic">
-                <img [src]="home.profilePic ? apiUrl + home.profilePic : 'assets/default-avatar.png'"
-                     alt="{{ home.firstName }} {{ home.lastName }}"
-                     width="400" height="250"
-                     loading="eager"
-                     decoding="async"
-                     fetchpriority="high"
-                     class="img-fluid rounded shadow hover-zoom-img">
-              </ng-container>
-            </picture>
-
+                <picture>
+                  <img 
+                    [src]="home?.profilePic ? (apiUrl + home.profilePic) : 'assets/default-avatar.png'"
+                    alt="{{ home?.firstName }} {{ home?.lastName }}"
+                    width="400" height="250"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
+                    class="img-fluid rounded shadow hover-zoom-img">
+                </picture>
             <ng-container *ngIf="skills.length; else noSkills">
               <span *ngFor="let skill of skills; let i = index"
                     class="tag"

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { ScrollRevealDirective } from '../../Directive/scroll';
-import { Portfolio } from '../../Services/portfolio';
 
 @Component({
   selector: 'app-projects',
@@ -11,18 +11,18 @@ import { Portfolio } from '../../Services/portfolio';
   styleUrls: ['./projects.css']
 })
 export class Projects implements OnInit {
-  loading: boolean = true;
+  loading = true;
   projects: any[] = [];
+  apiUrl = 'https://portfoliomain-sbsy.onrender.com';
 
-  constructor(private portfolioService: Portfolio) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.fetchProjects();
   }
 
-  // ✅ Fetch projects via Portfolio service
   fetchProjects() {
-    this.portfolioService.getPortfolio().subscribe({
+    this.http.get(`${this.apiUrl}/`).subscribe({
       next: (data: any) => {
         if (data?.projects?.length) {
           this.projects = data.projects.map((proj: any) => ({
@@ -31,7 +31,7 @@ export class Projects implements OnInit {
             description: proj.projectDescription || 'No description available.',
             techStack: Array.isArray(proj.projectSkills) ? proj.projectSkills : [],
             screenshot: proj.screenshot
-              ? `${this.getBaseUrl()}${proj.screenshot}`
+              ? `${this.apiUrl}${proj.screenshot}`
               : 'assets/no-image.png',
             github: proj.github || '#',
             live: proj.live || null
@@ -44,12 +44,5 @@ export class Projects implements OnInit {
         this.loading = false;
       }
     });
-  }
-
-  // ✅ Helper: dynamic backend base URL
-  private getBaseUrl(): string {
-    return window.location.hostname.includes('localhost')
-      ? 'http://localhost:5000'
-      : 'https://portfoliomain-sbsy.onrender.com';
   }
 }

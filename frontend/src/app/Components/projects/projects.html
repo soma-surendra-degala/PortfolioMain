@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <!-- No Projects -->
+    <!-- No Projects Available -->
     <div *ngIf="!loading && (!projects || projects.length === 0)" class="text-center text-muted">
       <p>No projects available yet. Check back soon!</p>
     </div>
@@ -17,56 +17,67 @@
     <!-- Project Grid -->
     <div class="row g-4" *ngIf="!loading && projects?.length">
       <div class="col-md-6 col-lg-4" *ngFor="let project of projects">
-        <div class="project-card shadow-sm rounded h-100 position-relative overflow-hidden">
+        <div class="project-card shadow-sm rounded h-100 overflow-hidden bg-light position-relative">
 
           <!-- Project Screenshot -->
           <picture>
-            <source [srcset]="project.screenshot?.replace('.jpg', '.webp')" type="image/webp">
-            <img 
-              [src]="project.screenshot"
-              alt="{{ project.title }}"
-              width="400" height="250"
-              loading="lazy"
-              decoding="async"
-              class="project-img rounded-top w-100" />
+            <ng-container *ngIf="project.screenshot; else noImage">
+              <source [srcset]="project.screenshot.replace('.jpg', '.webp')" type="image/webp" />
+              <img [src]="project.screenshot"
+                   [alt]="project.title + ' Screenshot'"
+                   class="project-img rounded-top w-100"
+                   width="400" height="250"
+                   loading="lazy" decoding="async" />
+            </ng-container>
+            <ng-template #noImage>
+              <img src="assets/no-image.png"
+                   alt="No preview available"
+                   class="project-img rounded-top w-100"
+                   width="400" height="250"
+                   loading="lazy" decoding="async" />
+            </ng-template>
           </picture>
 
-          <!-- Overlay -->
+          <!-- Overlay Details -->
           <div class="overlay p-3">
-            <span class="badge bg-secondary mb-2">{{ project.type }}</span>
+            <span class="badge bg-secondary text-uppercase">{{ project.type }}</span>
             <h5 class="fw-bold">{{ project.title }}</h5>
-            <p class="small mb-2">{{ project.description }}</p>
+            <p class="small text-muted mb-2">{{ project.description }}</p>
 
             <!-- Tech Stack -->
-            <div class="d-flex flex-wrap gap-1 mb-2">
-              <span class="tech-tag small px-2 py-1 bg-light rounded"
-                    *ngFor="let tech of project.techStack">
+            <div class="d-flex flex-wrap gap-1">
+              <span *ngFor="let tech of project.techStack"
+                    class="tech-tag small px-2 py-1 bg-light border rounded">
                 {{ tech }}
               </span>
             </div>
 
-            <!-- Links -->
+            <!-- Action Links -->
             <div class="d-flex align-items-center gap-3">
-              <a [href]="project.github" 
-                 *ngIf="project.github"
-                 target="_blank" rel="noopener noreferrer"
-                 class="d-flex align-items-center text-dark gap-1 fs-6">
+              <!-- GitHub -->
+              <a *ngIf="project.github"
+                 [href]="project.github"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="text-dark d-flex align-items-center gap-1 fs-6">
                 <i class="bi bi-github"></i> GitHub
               </a>
 
+              <!-- Live Demo -->
               <a *ngIf="project.live"
                  [href]="project.live"
                  target="_blank"
                  rel="noopener noreferrer"
                  class="text-primary fs-5"
-                 aria-label="Live Project">
+                 aria-label="Live Demo">
                 <i class="bi bi-box-arrow-up-right"></i>
               </a>
 
+              <!-- Live Demo Disabled -->
               <span *ngIf="!project.live"
                     class="text-secondary fs-5"
                     style="cursor: not-allowed;"
-                    aria-label="Live Project Disabled">
+                    aria-label="Live Demo Not Available">
                 <i class="bi bi-box-arrow-up-right"></i>
               </span>
             </div>
