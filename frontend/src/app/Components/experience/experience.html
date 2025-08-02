@@ -1,0 +1,44 @@
+<section id="experience" class="experience-section py-5">
+  <div class="container">
+    <p class="text-center fw-bold fs-2 mb-5 fade-in" appScrollReveal>Journey</p>
+
+    <div class="row">
+      <!-- Left: Education -->
+      <div class="col-md-6 timeline-column">
+        <p class="text-center fw-bold fs-4 mb-4">Education</p>
+        <div class="timeline">
+          <div class="timeline-item" *ngFor="let edu of education">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content stagger" appScrollReveal>
+              <h5>{{ edu.degree }} 
+                <span *ngIf="edu.field">({{ edu.field }})</span>
+                <span class="company">@ {{ edu.institution }}</span>
+              </h5>
+              <small class="text-muted">
+                {{ edu.startYear }} - {{ edu.endYear }}
+              </small>
+              <p *ngIf="edu.grade">Grade: {{ edu.grade }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Experience -->
+      <div class="col-md-6 timeline-column">
+        <p class="text-center fw-bold fs-4 mb-4">Experience</p>
+        <div class="timeline">
+          <div class="timeline-item" *ngFor="let exp of experiences">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content stagger" appScrollReveal>
+              <h5>{{ exp.jobTitle }} 
+               <span class="company">@ {{ exp.company }}</span>
+              </h5>
+                <p> {{exp.startYear}} {{ exp.endYear}} </p><p> {{ exp.location }}</p>
+                <p>{{ exp.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,33 @@
+<section class="contact-section bg-white text-dark py-5">
+  <div class="container">
+    <h2 class="text-center fs-2 fw-bold mb-5 fade-in" appScrollReveal>
+      Get in Touch
+    </h2>
+
+    <div class="row g-5 justify-content-center align-items-start stagger" appScrollReveal>
+
+
+      <!-- Contact Form -->
+      <div class="col-md-7">
+        <div class="contact-form p-4 rounded shadow">
+          <form (submit)="onSubmit($event)">
+            <div class="mb-3">
+              <label for="name" class="form-label fw-semibold">Your Name</label>
+              <input type="text" class="form-control" id="name" placeholder="Your Name" required />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label fw-semibold">Your Email</label>
+              <input type="email" class="form-control" id="email" placeholder="youremail@example.com" required />
+            </div>
+            <div class="mb-3">
+              <label for="message" class="form-label fw-semibold">Message</label>
+              <textarea class="form-control" id="message" rows="5" placeholder="Write your message..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark w-100 py-2">Send Message</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

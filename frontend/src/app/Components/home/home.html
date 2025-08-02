@@ -1,0 +1,102 @@
+<!-- Loader -->
+<app-loader *ngIf="loading" message="Loading Portfolio..."></app-loader>
+
+<!-- Main Content -->
+<div *ngIf="!loading && home">
+  <!-- Hero Section -->
+  <section id="home">
+    <div class="container hero">
+      <div class="row align-items-center mb-4">
+
+        <!-- Left -->
+        <div class="col-md-6 text-box text-center text-md-start p-4 fade-in fade-left" appScrollReveal>
+          <h1 class="brand fw-bold " [class.animate]="animate">
+            Hello, I'm<br />
+            {{ home.firstName }} {{ home.middleName }} <br />
+            {{ home.lastName }}
+          </h1>
+          <p class="lead">{{ home.role }}</p>
+
+          <!-- Social Icons -->
+          <div class="d-flex justify-content-center justify-content-md-start my-4 gap-3">
+            <a *ngIf="home.github" [href]="getValidUrl(home.github)" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-github text-dark fs-4 my-4 mx-2 py-2"></i>
+          </a>
+
+          <a *ngIf="home.linkedin" [href]="getValidUrl(home.linkedin)" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-linkedin text-dark fs-4 my-4 mx-2 py-2"></i>
+          </a>
+          <button class="btn btn-dark px-4" (click)="scrollToProjects()">
+            View Projects <i class="bi bi-arrow-down"></i>
+          </button>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="col-md-6 img-box mt-md-0 fade-in fade-right" appScrollReveal>
+          <div class="img-wrapper stagger" appScrollReveal>
+            <picture>
+              <ng-container *ngIf="home.profilePic;">
+                <img [src]="'http://localhost:5000' + home.profilePic"
+                     alt="{{ home.firstName }} {{ home.lastName }}"
+                     width="400" height="250"
+                     loading="eager"
+                     decoding="async"
+                     fetchpriority="high"
+                     class="img-fluid rounded shadow hover-zoom-img">
+              </ng-container>
+            </picture>
+
+           <span *ngFor="let skill of skills; let i = index"
+                   class="tag"
+                   [ngClass]="'pos' + i">
+               {{ skill }}
+             </span>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scroll Down Arrows -->
+  <div class="scroll-down-arrow text-center mt-4 fade-in" appScrollReveal>
+    <i class="bi bi-arrow-down" (click)="scrollToSection('about')" aria-label="Scroll Down"></i>
+  </div>
+
+  <!-- About Section -->
+  <section id="about" class="my-4">
+    <app-about></app-about>
+  </section>
+
+  <div class="scroll-down-arrow text-center mt-4 fade-in" appScrollReveal>
+    <i class="bi bi-arrow-down" (click)="scrollToSection('projects')" aria-label="Scroll Down"></i>
+  </div>
+
+  <!-- Projects Section -->
+  <section id="projects" class="my-4">
+    <app-projects></app-projects>
+  </section>
+
+  <div class="scroll-down-arrow text-center mt-4 fade-in" appScrollReveal>
+    <i class="bi bi-arrow-down" (click)="scrollToSection('experience')" aria-label="Scroll Down"></i>
+  </div>
+
+  <!-- Experience Section -->
+  <section id="experience" class="my-4">
+    <app-experience></app-experience>
+  </section>
+
+  <div class="scroll-down-arrow text-center mt-4 fade-in" appScrollReveal>
+    <i class="bi bi-arrow-down" (click)="scrollToSection('contact')" aria-label="Scroll Down"></i>
+  </div>
+
+  <!-- Contact Section -->
+  <section id="contact" class="my-2">
+    <app-contact></app-contact>
+  </section>
+
+  <div class="scroll-down-arrow text-center mt-3 fade-in" appScrollReveal>
+    <i class="bi bi-arrow-up" (click)="scrollToSection('home')" aria-label="Scroll Up"></i>
+  </div>
+</div>

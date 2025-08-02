@@ -1,0 +1,85 @@
+
+.project-card {
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.project-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-card:hover {
+  transform: scale(1.02);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #000;
+  opacity: 0;
+  padding: 1rem;
+  transition: opacity 0.3s ease;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  font-size: 0.85rem;
+  gap: 0.3rem;
+}
+
+.project-card:hover .overlay {
+  opacity: 1;
+}
+
+.tech-tag {
+  background-color: #e8e8e8;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.3em 0.6em;
+}
+
+@media (max-width: 768px) {
+  .project-card {
+    height: 320px; /* smaller to fit screen */
+  }
+
+  .overlay {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .overlay h5 {
+    font-size: 0.9rem;
+  }
+
+  .overlay p {
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+
+  .tech-tag {
+    font-size: 0.6rem;
+    padding: 2px 5px;
+  }
+
+  .overlay a {
+    font-size: 0.7rem;
+  }
+}

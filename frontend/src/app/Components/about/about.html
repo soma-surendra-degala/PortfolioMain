@@ -1,0 +1,70 @@
+<!-- About Section -->
+<div class="fw-bold text-center about fade-in fade-up" appScrollReveal>
+  About Me
+</div>
+
+<div class="container hero">
+  <div class="row align-items-center my-5">
+
+    <!-- Quote -->
+    <div class="col-12 text-center">
+      <p class="lead text-muted fade-in mx-auto" appScrollReveal>
+        "{{ header.aboutQuote }}"
+      </p>
+    </div>
+
+    <!-- Left Image -->
+    <div class="col-md-6 img-box text-center my-4 mb-md-0">
+      <div class="img-wrapper stagger" appScrollReveal>
+        <picture *ngIf="aboutPic">
+          <img [src]="aboutPic"
+               alt="About Image"
+               width="400"
+               height="400"
+               loading="lazy"
+               decoding="async"
+               class="img-fluid rounded shadow">
+        </picture>
+      </div>
+    </div>
+
+    <!-- Right Text Info -->
+    <div class="col-md-6 text-box text-center fade-in fade-right" appScrollReveal>
+      <h1 [class.animate]="animate" class="logotext">
+        Hi there!<br>
+        I'm {{ header.firstName }} {{ header.middleName }} {{ header.lastName }}
+      </h1>
+      <p>{{ header.aboutText }}</p>
+
+      <!-- Skills Summary -->
+      <div class="row pt-3 stagger" appScrollReveal>
+
+        <!-- Skills Section 1 -->
+        <div class="col-sm-6 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ header.skillsHeader1 }}</h5>
+              <p class="card-text small">
+                {{ skills1.join(', ') }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills Section 2 -->
+        <div class="col-sm-6 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ header.skillsHeader2 }}</h5>
+              <p class="card-text small">
+                {{ skills2.join(', ') }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
