@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: portfolio-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build -- --configuration production
+    staticPublishPath: dist/Portfolio
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
