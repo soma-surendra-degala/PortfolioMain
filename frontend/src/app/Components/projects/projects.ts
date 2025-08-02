@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Loader } from '../loader/loader';
 import { ScrollRevealDirective } from '../../Directive/scroll';
+import { Portfolio } from '../../Services/portfolio';
 
 @Component({
   selector: 'app-projects',
@@ -15,15 +14,15 @@ export class Projects implements OnInit {
   loading: boolean = true;
   projects: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private portfolioService: Portfolio) {}
 
   ngOnInit(): void {
     this.fetchProjects();
   }
 
-  // ✅ Fetch projects dynamically from backend
+  // ✅ Fetch projects via Portfolio service
   fetchProjects() {
-    this.http.get('http://localhost:5000/').subscribe({
+    this.portfolioService.getPortfolio().subscribe({
       next: (data: any) => {
         if (data?.projects?.length) {
           this.projects = data.projects.map((proj: any) => ({
@@ -32,8 +31,8 @@ export class Projects implements OnInit {
             description: proj.projectDescription || 'No description available.',
             techStack: Array.isArray(proj.projectSkills) ? proj.projectSkills : [],
             screenshot: proj.screenshot
-              ? `http://localhost:5000${proj.screenshot}`
-              : 'assets/no-image.png', // fallback if no screenshot
+              ? `${this.getBaseUrl()}${proj.screenshot}`
+              : 'assets/no-image.png',
             github: proj.github || '#',
             live: proj.live || null
           }));
@@ -45,5 +44,12 @@ export class Projects implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  // ✅ Helper: dynamic backend base URL
+  private getBaseUrl(): string {
+    return window.location.hostname.includes('localhost')
+      ? 'http://localhost:5000'
+      : 'https://portfoliomain-sbsy.onrender.com';
   }
 }

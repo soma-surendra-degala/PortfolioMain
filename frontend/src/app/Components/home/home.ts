@@ -32,6 +32,7 @@ export class Home implements OnInit, AfterViewInit {
   home: any = null;
   loading: boolean = true;
   skills: string[] = [];
+  apiUrl = 'https://portfoliomain-sbsy.onrender.com'; // ✅ Replace with your Render backend URL
 
   constructor(
     private route: ActivatedRoute,
@@ -41,7 +42,6 @@ export class Home implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // Handle scrollTo param (e.g., ?scrollTo=about)
     this.route.queryParams.subscribe(params => {
       const sectionId = params['scrollTo'];
       if (sectionId) {
@@ -63,11 +63,11 @@ export class Home implements OnInit, AfterViewInit {
       }
     });
 
-    // ✅ Load portfolio data for Home
-    this.http.get('http://localhost:5000/').subscribe({
+    // ✅ Load portfolio data
+    this.http.get(`${this.apiUrl}/`).subscribe({
       next: (data: any) => {
         this.home = data;
-        this.skills = data.skills || []; // Load skills dynamically
+        this.skills = data.skills || [];
         this.loading = false;
       },
       error: (err) => {
@@ -97,7 +97,6 @@ export class Home implements OnInit, AfterViewInit {
     }
   }
 
-  // ✅ Ensure social links are valid
   getValidUrl(url: string): string {
     if (!url) return '';
     return url.startsWith('http') ? url : 'https://' + url;

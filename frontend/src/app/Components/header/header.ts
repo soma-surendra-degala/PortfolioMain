@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { Portfolio } from '../../Services/portfolio';  // ✅ import your service
 
 @Component({
   selector: 'app-header',
@@ -14,10 +14,10 @@ export class Header implements OnInit {
   menuOpen = false;
   portfolio: any = null;
 
-  constructor(private http: HttpClient,private router:Router) {}
+  constructor(private portfolioService: Portfolio, private router: Router) {}
 
   ngOnInit(): void {
-    this.http.get('http://localhost:5000/').subscribe({
+    this.portfolioService.getPortfolio().subscribe({
       next: (data: any) => {
         this.portfolio = data;
       },

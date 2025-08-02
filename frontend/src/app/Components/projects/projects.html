@@ -1,38 +1,52 @@
-
-<section class="projects-section py-5 my-5 bg-white text-dark">
+<section id="projects" class="projects-section py-5 my-5 bg-white text-dark">
   <div class="container">
     <h2 class="text-center mb-5 fw-bold fade-in" appScrollReveal>Projects</h2>
 
-    <div class="row g-4">
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- No Projects -->
+    <div *ngIf="!loading && (!projects || projects.length === 0)" class="text-center text-muted">
+      <p>No projects available yet. Check back soon!</p>
+    </div>
+
+    <!-- Project Grid -->
+    <div class="row g-4" *ngIf="!loading && projects?.length">
       <div class="col-md-6 col-lg-4" *ngFor="let project of projects">
-        <div class="project-card shadow-sm rounded h-100">
+        <div class="project-card shadow-sm rounded h-100 position-relative overflow-hidden">
 
           <!-- Project Screenshot -->
           <picture>
             <source [srcset]="project.screenshot?.replace('.jpg', '.webp')" type="image/webp">
-            <img [src]="project.screenshot"
-                 alt="{{ project.title }}"
-                 width="400" height="250"
-                 loading="lazy"
-                 decoding="async"
-                 class="project-img rounded-top" />
+            <img 
+              [src]="project.screenshot"
+              alt="{{ project.title }}"
+              width="400" height="250"
+              loading="lazy"
+              decoding="async"
+              class="project-img rounded-top w-100" />
           </picture>
 
           <!-- Overlay -->
-          <div class="overlay">
-            <span class="badge bg-secondary">{{ project.type }}</span>
-            <h5 class="fw-bold m-0">{{ project.title }}</h5>
-            <p class="m-0">{{ project.description }}</p>
-          
+          <div class="overlay p-3">
+            <span class="badge bg-secondary mb-2">{{ project.type }}</span>
+            <h5 class="fw-bold">{{ project.title }}</h5>
+            <p class="small mb-2">{{ project.description }}</p>
+
             <!-- Tech Stack -->
-            <div class="d-flex flex-wrap gap-1 mt-2">
-              <span class="tech-tag small px-2 py-1" *ngFor="let tech of project.techStack">
+            <div class="d-flex flex-wrap gap-1 mb-2">
+              <span class="tech-tag small px-2 py-1 bg-light rounded"
+                    *ngFor="let tech of project.techStack">
                 {{ tech }}
               </span>
             </div>
 
             <!-- Links -->
-            <div class="d-flex align-items-center gap-3 mt-1">
+            <div class="d-flex align-items-center gap-3">
               <a [href]="project.github" 
                  *ngIf="project.github"
                  target="_blank" rel="noopener noreferrer"

@@ -6,7 +6,7 @@ import { ScrollRevealDirective } from '../../Directive/scroll';
 @Component({
   selector: 'app-experience',
   standalone: true,
-  imports: [CommonModule,ScrollRevealDirective],
+  imports: [CommonModule, ScrollRevealDirective],
   templateUrl: './experience.html',
   styleUrls: ['./experience.css']
 })
@@ -14,10 +14,13 @@ export class Experience implements OnInit {
   education: any[] = [];
   experiences: any[] = [];
 
+  // ✅ Use your deployed backend instead of localhost
+  private apiUrl = 'https://portfoliomain-sbsy.onrender.com';
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get('http://localhost:5000/').subscribe({
+    this.http.get(`${this.apiUrl}/`).subscribe({
       next: (data: any) => {
         this.education = data.education || [];
         this.experiences = data.experiences || [];

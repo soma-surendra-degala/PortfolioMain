@@ -10,7 +10,7 @@
 
         <!-- Left -->
         <div class="col-md-6 text-box text-center text-md-start p-4 fade-in fade-left" appScrollReveal>
-          <h1 class="brand fw-bold " [class.animate]="animate">
+          <h1 class="brand fw-bold" [class.animate]="animate">
             Hello, I'm<br />
             {{ home.firstName }} {{ home.middleName }} <br />
             {{ home.lastName }}
@@ -20,15 +20,16 @@
           <!-- Social Icons -->
           <div class="d-flex justify-content-center justify-content-md-start my-4 gap-3">
             <a *ngIf="home.github" [href]="getValidUrl(home.github)" target="_blank" rel="noopener noreferrer">
-            <i class="bi bi-github text-dark fs-4 my-4 mx-2 py-2"></i>
-          </a>
+              <i class="bi bi-github text-dark fs-4 my-4 mx-2 py-2"></i>
+            </a>
 
-          <a *ngIf="home.linkedin" [href]="getValidUrl(home.linkedin)" target="_blank" rel="noopener noreferrer">
-            <i class="bi bi-linkedin text-dark fs-4 my-4 mx-2 py-2"></i>
-          </a>
-          <button class="btn btn-dark px-4" (click)="scrollToProjects()">
-            View Projects <i class="bi bi-arrow-down"></i>
-          </button>
+            <a *ngIf="home.linkedin" [href]="getValidUrl(home.linkedin)" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-linkedin text-dark fs-4 my-4 mx-2 py-2"></i>
+            </a>
+
+            <button class="btn btn-dark px-4" (click)="scrollToProjects()">
+              View Projects <i class="bi bi-arrow-down"></i>
+            </button>
           </div>
         </div>
 
@@ -36,8 +37,8 @@
         <div class="col-md-6 img-box mt-md-0 fade-in fade-right" appScrollReveal>
           <div class="img-wrapper stagger" appScrollReveal>
             <picture>
-              <ng-container *ngIf="home.profilePic;">
-                <img [src]="'http://localhost:5000' + home.profilePic"
+              <ng-container *ngIf="home.profilePic">
+                <img [src]="home.profilePic ? apiUrl + home.profilePic : 'assets/default-avatar.png'"
                      alt="{{ home.firstName }} {{ home.lastName }}"
                      width="400" height="250"
                      loading="eager"
@@ -47,12 +48,17 @@
               </ng-container>
             </picture>
 
-           <span *ngFor="let skill of skills; let i = index"
-                   class="tag"
-                   [ngClass]="'pos' + i">
-               {{ skill }}
-             </span>
-           
+            <ng-container *ngIf="skills.length; else noSkills">
+              <span *ngFor="let skill of skills; let i = index"
+                    class="tag"
+                    [ngClass]="'pos' + i">
+                {{ skill }}
+              </span>
+            </ng-container>
+            <ng-template #noSkills>
+              <span class="text-muted">No skills added yet</span>
+            </ng-template>
+
           </div>
         </div>
       </div>

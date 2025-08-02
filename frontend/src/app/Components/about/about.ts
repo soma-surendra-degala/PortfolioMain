@@ -17,23 +17,26 @@ export class About implements OnInit {
   skills2: string[] = [];
   aboutPic = '';
 
+  // ✅ Use your deployed backend
+  private apiUrl = 'https://portfoliomain-sbsy.onrender.com';
+
   constructor(private portfolioService: Portfolio) {}
 
   ngOnInit(): void {
     setTimeout(() => (this.animate = true), 500);
 
-    // Fetch data from backend
     this.portfolioService.getPortfolio().subscribe({
       next: (data) => {
         this.header = data || {};
         this.skills1 = data.skills1 || [];
         this.skills2 = data.skills2 || [];
+
+        // ✅ Fix image path (from deployed backend)
         this.aboutPic = data.aboutPic
-          ? `http://localhost:5000${data.aboutPic}`
+          ? `${this.apiUrl}${data.aboutPic}`
           : '';
       },
       error: (err) => console.error('❌ Failed to load About section', err)
     });
   }
 }
-

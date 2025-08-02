@@ -18,7 +18,6 @@ frontend/.angular/
 # ------------------------
 # Backend uploads (user files)
 # ------------------------
-backend/uploads/
 .env
 
 # ------------------------

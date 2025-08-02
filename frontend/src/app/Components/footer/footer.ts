@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
-  imports:[CommonModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './footer.html',
   styleUrls: ['./footer.css']
 })
@@ -13,13 +14,17 @@ export class Footer implements OnInit {
   portfolio: any = null;
   currentYear: number = new Date().getFullYear();
 
-  constructor(private http: HttpClient,private router:Router) {}
+  // ✅ Use your deployed backend
+  private apiUrl = 'https://portfoliomain-sbsy.onrender.com';
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    this.http.get('http://localhost:5000/').subscribe({
+    this.http.get(this.apiUrl).subscribe({
       next: (data: any) => {
-        this.portfolio = data?.header || {};
-        this.startTypewriter(this.portfolio.aboutQuote || '"Code. Create. Inspire."');
+        this.portfolio = data || {};
+        const quote = this.portfolio.aboutQuote || '"Code. Create. Inspire."';
+        this.startTypewriter(quote);
       },
       error: (err) => {
         console.error('❌ Failed to load footer data', err);
