@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class Portfolio {
-  private apiUrl = 'http://localhost:5000';
+  private apiUrl = 'https://portfolio-r6ur.onrender.com';
+
 
   constructor(private http: HttpClient) {}
 
