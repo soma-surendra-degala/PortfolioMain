@@ -14,6 +14,7 @@ package-lock.json
 dist/
 frontend/dist/
 frontend/.angular/
+!dist/Portfolio/browser/static.json
 
 # ------------------------
 # Backend uploads (user files)
