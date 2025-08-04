@@ -15,7 +15,7 @@ export class AdminExperiences implements OnInit {
   education: any[] = [
     { degree: '', field: '', institution: '', startYear: '', endYear: '', grade: '' }
   ];
-
+  
   experiences: any[] = [
     { jobTitle: '', company: '', location: '', startYear: '', endYear: '', description: '' }
   ];
@@ -26,18 +26,18 @@ export class AdminExperiences implements OnInit {
     this.fetchData();
   }
 
-  // Fetch portfolio education & experiences
+  // ✅ Fetch Education & Experience from backend
   fetchData() {
     this.portfolioService.getPortfolio().subscribe({
       next: (data) => {
-        this.education = data.education?.length ? data.education : this.education;
-        this.experiences = data.experiences?.length ? data.experiences : this.experiences;
+        if (data.education?.length) this.education = data.education;
+        if (data.experiences?.length) this.experiences = data.experiences;
       },
-      error: (err) => console.error('❌ Failed to load education/experiences', err)
+      error: (err) => console.error('❌ Failed to load Education/Experience', err)
     });
   }
 
-  // Education Management
+  // ✅ Education Handlers
   addEducation() {
     this.education.push({ degree: '', field: '', institution: '', startYear: '', endYear: '', grade: '' });
   }
@@ -45,7 +45,7 @@ export class AdminExperiences implements OnInit {
     if (this.education.length > 1) this.education.splice(index, 1);
   }
 
-  // Experience Management
+  // ✅ Experience Handlers
   addExperience() {
     this.experiences.push({ jobTitle: '', company: '', location: '', startYear: '', endYear: '', description: '' });
   }
@@ -53,7 +53,7 @@ export class AdminExperiences implements OnInit {
     if (this.experiences.length > 1) this.experiences.splice(index, 1);
   }
 
-  // Save data
+  // ✅ Save Education & Experience
   onSave() {
     const formData = new FormData();
     formData.append('education', JSON.stringify(this.education));
@@ -62,7 +62,7 @@ export class AdminExperiences implements OnInit {
     this.portfolioService.savePortfolio(formData).subscribe({
       next: () => alert('✅ Education & Experience saved successfully'),
       error: (err) => {
-        console.error('❌ Failed to save', err);
+        console.error('❌ Failed to save Education/Experience', err);
         alert('❌ Failed to save Education/Experience');
       }
     });

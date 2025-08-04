@@ -11,7 +11,6 @@ import { AdminPersonal } from './admin/personal/personal';
 import { AdminAbout } from './admin/about/about';
 import { AdminProjects } from './admin/projects/projects';
 import { AdminExperiences } from './admin/experiences/experiences';
-import { AdminHome } from './admin/home/home';
 
 
 export const routes: Routes = [
@@ -26,12 +25,11 @@ export const routes: Routes = [
         component: Admin,
         canActivate: [AuthGuard],
         children: [
-          {path:'home',component:AdminHome},
           { path: 'personal', component: AdminPersonal },
           { path: 'about', component: AdminAbout },
           { path: 'projects', component: AdminProjects },
           { path: 'experiences', component: AdminExperiences },
-          { path: '', redirectTo: 'home', pathMatch: 'full' }
+          { path: '', redirectTo: 'personal', pathMatch: 'full' }
         ]
       },
     {path:'login',component:Login,title:'Login | Portfolio'},

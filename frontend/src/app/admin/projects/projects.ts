@@ -25,13 +25,15 @@ export class AdminProjects implements OnInit {
     }
   ];
 
+  isSaving: boolean = false; // loader flag
+
   constructor(private portfolioService: Portfolio) {}
 
   ngOnInit(): void {
     this.fetchProjects();
   }
 
-  // Fetch projects from backend
+  // ✅ Fetch projects from backend
   fetchProjects() {
     this.portfolioService.getPortfolio().subscribe({
       next: (data) => {
@@ -52,7 +54,7 @@ export class AdminProjects implements OnInit {
     });
   }
 
-  // Add & Remove Project
+  // ✅ Add & Remove Project
   addProject() {
     this.projects.push({ 
       projectName: '', 
@@ -69,7 +71,7 @@ export class AdminProjects implements OnInit {
     if (this.projects.length > 1) this.projects.splice(index, 1);
   }
 
-  // Add & Remove Project Skill
+  // ✅ Add & Remove Project Skill
   addProjectSkill(projectIndex: number) {
     this.projects[projectIndex].projectSkills.push('');
   }
@@ -79,7 +81,7 @@ export class AdminProjects implements OnInit {
     }
   }
 
-  // Handle File Selection
+  // ✅ Handle File Selection
   onFileSelected(event: any, type: string, index?: number) {
     const file = event.target.files[0];
     if (!file || type !== 'projectScreenshot' || index === undefined) return;
@@ -93,8 +95,9 @@ export class AdminProjects implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  // Save Projects
+  // ✅ Save Projects
   onSave() {
+    this.isSaving = true;
     const formData = new FormData();
 
     formData.append('projects', JSON.stringify(this.projects.map((p) => {
@@ -109,7 +112,7 @@ export class AdminProjects implements OnInit {
       }
     });
 
-    // Ensure live links have https://
+    // Ensure live links start with https://
     this.projects.forEach(p => {
       if (p.live && !/^https?:\/\//i.test(p.live)) {
         p.live = 'https://' + p.live;
@@ -117,8 +120,12 @@ export class AdminProjects implements OnInit {
     });
 
     this.portfolioService.savePortfolio(formData).subscribe({
-      next: () => alert('✅ Projects saved successfully'),
+      next: () => {
+        this.isSaving = false;
+        alert('✅ Projects saved successfully');
+      },
       error: (err) => {
+        this.isSaving = false;
         console.error('❌ Failed to save projects', err);
         alert('❌ Failed to save projects');
       }

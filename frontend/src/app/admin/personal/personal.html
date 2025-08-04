@@ -1,61 +1,77 @@
-<h4 class="mb-3">Personal Information</h4>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">First Name</label>
-          <input type="text" class="form-control" [(ngModel)]="header.firstName" name="firstName" required>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Middle Name</label>
-          <input type="text" class="form-control" [(ngModel)]="header.middleName" name="middleName">
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Last Name</label>
-          <input type="text" class="form-control" [(ngModel)]="header.lastName" name="lastName">
-        </div>
-      </div>
+<form (ngSubmit)="onSave()" class="container py-4">
 
-      <div class="mt-3">
-        <label class="form-label">Role</label>
-        <input type="text" class="form-control" [(ngModel)]="header.role" name="role" placeholder="Ex: Full Stack Developer">
-      </div>
-
-      <div class="row mt-3">
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Upload Resume (PDF)</label>
-          <input type="file" class="form-control" accept="application/pdf" (change)="onFileSelected($event, 'resume')">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Profile Picture</label>
-          <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event, 'profilePic')">
-          <div *ngIf="profilePicPreview" class="mt-3">
-            <img [src]="profilePicPreview" alt="Profile Preview" class="img-thumbnail" width="150">
-          </div>
-        </div>
-      </div>
-
-
-            <!-- ------------------ Social Media Links ------------------ -->
-<h4 class="mb-3"><i class="bi bi-globe-central-south-asia-fill"></i> Social Media Links</h4>
-<div class="row g-3">
-  <div class="col-md-4" *ngFor="let field of socialLinks">
-    <label class="form-label">
-      <i class="bi bi-{{field.icon}}"></i> {{ field.key | titlecase }}
-    </label>
-    <input [type]="field.type"
-           class="form-control"
-           [ngModel]="getValue(field.key)"
-           (ngModelChange)="setValue(field.key, $event)"
-           [name]="field.key"
-           [placeholder]="field.placeholder">
+  <!-- Personal Information -->
+  <h4 class="mb-3">Personal Information</h4>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">First Name</label>
+      <input type="text" class="form-control" [(ngModel)]="header.firstName" name="firstName" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Middle Name</label>
+      <input type="text" class="form-control" [(ngModel)]="header.middleName" name="middleName">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Last Name</label>
+      <input type="text" class="form-control" [(ngModel)]="header.lastName" name="lastName">
+    </div>
   </div>
-</div>
 
-    
+  <div class="mt-3">
+    <label class="form-label">Role</label>
+    <input type="text" class="form-control" [(ngModel)]="header.role" name="role" placeholder="Ex: Full Stack Developer">
+  </div>
 
-      <!-- ------------------ Highlight Skills -------------------->
-      <h4 class="my-3">Highlight Skills</h4>
-      <div class="row g-2">
-        <div class="col-md-3" *ngFor="let skill of skills; let i = index; trackBy: trackByIndex">
-          <input type="text" class="form-control" [(ngModel)]="skills[i]" [name]="'skill' + i" placeholder="Skill {{i+1}}">
-        </div>
+  <!-- Resume & Profile Picture -->
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <label class="form-label fw-bold">Upload Resume (PDF)</label>
+      <input type="file" class="form-control" accept="application/pdf" (change)="onFileSelected($event, 'resume')">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Profile Picture</label>
+      <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event, 'profilePic')">
+      <div *ngIf="profilePicPreview" class="mt-3">
+        <img [src]="profilePicPreview" alt="Profile Preview" class="img-thumbnail" width="150">
       </div>
+    </div>
+  </div>
+
+  <!-- Social Media Links -->
+  <h4 class="my-4">
+    <i class="bi bi-globe-central-south-asia-fill"></i> Social Media Links
+  </h4>
+  <div class="row g-3">
+    <div class="col-md-4" *ngFor="let field of socialLinks">
+      <label class="form-label">
+        <i class="bi bi-{{field.icon}}"></i> {{ field.key | titlecase }}
+      </label>
+      <input [type]="field.type"
+             class="form-control"
+             [ngModel]="getValue(field.key)"
+             (ngModelChange)="setValue(field.key, $event)"
+             [name]="field.key"
+             [placeholder]="field.placeholder">
+    </div>
+  </div>
+
+  <!-- Highlight Skills -->
+  <h4 class="my-4">Highlight Skills</h4>
+  <div class="row g-2">
+    <div class="col-md-3" *ngFor="let skill of skills; let i = index; trackBy: trackByIndex">
+      <input type="text"
+             class="form-control"
+             [(ngModel)]="skills[i]"
+             [name]="'skill' + i"
+             placeholder="Skill {{i+1}}">
+    </div>
+  </div>
+
+  <!-- Save Button -->
+  <div class="text-center mt-4">
+    <button type="submit" class="btn btn-dark px-5">
+      <i class="bi bi-bookmark-fill"></i> Save Personal Page 
+    </button>
+  </div>
+
+</form>

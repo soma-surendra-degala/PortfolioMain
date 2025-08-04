@@ -17,8 +17,8 @@ export class AdminAbout implements OnInit {
   about = {
     aboutQuote: '',
     aboutText: '',
-    skillsabout1: '',
-    skillsabout2: ''
+    skillsHeader1: '',   // ✅ match backend schema
+    skillsHeader2: ''    // ✅ match backend schema
   };
 
   skills1: string[] = [''];
@@ -30,15 +30,15 @@ export class AdminAbout implements OnInit {
     this.fetchAbout();
   }
 
-  // Fetch About data
+  // ✅ Fetch About data from backend
   fetchAbout() {
     this.portfolioService.getPortfolio().subscribe({
       next: (data) => {
         if (data) {
           this.about.aboutQuote = data.aboutQuote || '';
           this.about.aboutText = data.aboutText || '';
-          this.about.skillsabout1 = data.skillsabout1 || '';
-          this.about.skillsabout2 = data.skillsabout2 || '';
+          this.about.skillsHeader1 = data.skillsHeader1 || '';
+          this.about.skillsHeader2 = data.skillsHeader2 || '';
           this.skills1 = data.skills1?.length ? data.skills1 : this.skills1;
           this.skills2 = data.skills2?.length ? data.skills2 : this.skills2;
           if (data.aboutPic) {
@@ -50,7 +50,7 @@ export class AdminAbout implements OnInit {
     });
   }
 
-  // Handle File Selection
+  // ✅ Handle File Selection
   onFileSelected(event: any, type: string) {
     const file = event.target.files[0];
     if (!file) return;
@@ -63,19 +63,19 @@ export class AdminAbout implements OnInit {
     }
   }
 
-  // Skills Section 1
+  // ✅ Skills Section 1
   addSkill1() { this.skills1.push(''); }
   removeSkill1(index: number) {
     if (this.skills1.length > 1) this.skills1.splice(index, 1);
   }
 
-  // Skills Section 2
+  // ✅ Skills Section 2
   addSkill2() { this.skills2.push(''); }
   removeSkill2(index: number) {
     if (this.skills2.length > 1) this.skills2.splice(index, 1);
   }
 
-  // Save About
+  // ✅ Save About Section
   onSave() {
     const formData = new FormData();
     formData.append('about', JSON.stringify(this.about));
