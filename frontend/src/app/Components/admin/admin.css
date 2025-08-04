@@ -1,99 +1,35 @@
-/* General Container */
-.container {
-  margin-top: 20px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+.admin-nav a {
+  text-decoration: none;
+  color: #BBBAC1;
+  font-weight: 500;
+  font-size: 16px;
+  position: relative;
+  padding-bottom: 5px; /* gives space for underline */
+  transition: color 0.3s ease;
 }
 
-/* Section Headings */
-h2, h4 {
-  font-weight: bold;
+.admin-nav a:hover {
   color: #333;
 }
 
-/* Labels */
-.form-label {
+.admin-nav a.active {
+  color: #000; /* fixed */
   font-weight: 600;
-  font-size: 14px;
-  color: #444;
 }
 
-/* Inputs and Textareas */
-.form-control {
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  transition: border-color 0.3s ease;
+.admin-nav a.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;  /* line right under text */
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #333;
+  border-radius: 2px;
+  animation: slideIn 0.3s ease;
 }
 
-.form-control:focus {
-  border-color: #000;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.497);
-}
-
-/* Buttons */
-button.btn {
-  border-radius: 8px;
-  font-size: 14px;
-  padding: 8px 14px;
-  transition: transform 0.2s ease;
-}
-
-button.btn:hover {
-  transform: translateY(-2px);
-}
-
-/* Save Button */
-.btn-primary {
-  background: #333;
-  border: none;
-}
-.btn-primary:hover {
-  background: #000;
-}
-
-/* Add / Remove Buttons */
-.btn-success {
-  background: #333;
-  border: none;
-}
-.btn-success:hover {
-  background: #333;
-}
-.btn-danger {
-  background: #333;
-  border: none;
-}
-.btn-danger:hover {
-  background: #333;
-}
-
-/* Project & Education Cards */
-.border.rounded {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
-}
-
-/* Mobile Specific Styles */
-@media (max-width: 768px) {
-  .container {
-    padding: 30px;
-  }
-  .form-control {
-    font-size: 13px;
-    padding: 8px 10px;
-  }
-  .btn {
-    font-size: 13px;
-    padding: 7px 12px;
-  }
-  img.img-thumbnail {
-    max-width: 100px;
-  }
+@keyframes slideIn {
+  from { width: 0; }
+  to { width: 100%; }
 }

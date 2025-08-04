@@ -1,0 +1,50 @@
+<h4 class="mb-3">About Section</h4>
+      <div class="mb-3">
+        <label class="form-label">Quote</label>
+        <input type="text" class="form-control" [(ngModel)]="about.aboutQuote" name="aboutQuote">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">About Text</label>
+        <textarea class="form-control" [(ngModel)]="about.aboutText" name="aboutText" rows="5"></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Upload About Picture</label>
+        <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event, 'aboutPic')">
+        <div *ngIf="aboutPicPreview" class="mt-3">
+          <img [src]="aboutPicPreview" alt="About Preview" class="img-thumbnail" width="150">
+        </div>
+      </div>
+
+      <hr class="my-4">
+
+      <!-- ------------------ Skills Section 1 ------------------ -->
+      <h4 class="mb-3">Skills Section 1</h4>
+      <div class="mb-3">
+        <label class="form-label">Skills about 1</label>
+        <input type="text" class="form-control" [(ngModel)]="about.skillsabout1" name="skillsabout1" placeholder="e.g., Frontend Skills">
+      </div>
+      <div *ngFor="let skill of skills1; let i = index; trackBy: trackByIndex" class="input-group mb-2">
+        <input type="text" class="form-control" [(ngModel)]="skills1[i]" name="skill1_{{i}}" placeholder="Skill {{i+1}}">
+        <button type="button" class="btn btn-dark" (click)="removeSkill1(i)" *ngIf="skills1.length > 1">✖</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-dark" (click)="addSkill1()">
+        <i class="bi bi-plus-lg "></i> Add Skill
+      </button>
+
+      <hr>
+
+      <!-- ------------------ Skills Section 2 ------------------ -->
+      <h4 class="mb-3">Skills Section 2</h4>
+      <div class="mb-3">
+        <label class="form-label">Skills about 2</label>
+        <input type="text" class="form-control" [(ngModel)]="about.skillsabout2" name="skillsabout2" placeholder="e.g., Backend Skills">
+      </div>
+      <div *ngFor="let skill of skills2; let j = index; trackBy: trackByIndex" class="input-group mb-2">
+        <input type="text" class="form-control" [(ngModel)]="skills2[j]" name="skill2_{{j}}" placeholder="Skill {{j+1}}">
+        <button type="button" class="btn btn-dark" (click)="removeSkill2(j)" *ngIf="skills2.length > 1">✖</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-dark" (click)="addSkill2()">
+        <i class="bi bi-plus-lg"></i> Add Skill
+      </button>
+
+      <hr class="my-4">

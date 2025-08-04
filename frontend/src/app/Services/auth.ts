@@ -4,25 +4,46 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private isLoggedIn = false;
+
+
+  constructor() {
+  this.logout();
+}
 
   login(username: string, password: string): boolean {
     if (username === 'admin' && password === '1234') {
-      this.isLoggedIn = true;
-      localStorage.setItem('auth', 'true'); // persist login
+      localStorage.setItem('auth', 'true');
+      localStorage.setItem('authTime', Date.now().toString());
       return true;
     }
-    this.isLoggedIn = false;
-    localStorage.removeItem('auth');
+    this.logout();
     return false;
   }
 
   getAuthStatus(): boolean {
-    return localStorage.getItem('auth') === 'true';
+  const auth = localStorage.getItem('auth');
+  const authTime = localStorage.getItem('authTime');
+
+  console.log('Auth check:', auth, authTime);
+  
+
+  if (auth === 'true' && authTime) {
+    const now = Date.now();
+    const diff = now - parseInt(authTime, 10);
+
+    // expire after 30 mins
+    if (diff < 30 * 60 * 1000) {
+      return true;
+    } else {
+      console.log("⏰ Session expired, logging out");
+      this.logout();
+    }
   }
+  return false;
+}
 
   logout(): void {
-    this.isLoggedIn = false;
     localStorage.removeItem('auth');
+    localStorage.removeItem('authTime');
   }
 }

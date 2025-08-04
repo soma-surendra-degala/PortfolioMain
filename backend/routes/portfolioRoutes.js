@@ -6,85 +6,57 @@ import defaultPortfolio from "../defaultPortfolio.js";
 
 const router = express.Router();
 
-// Multer for file upload
+// ---------------- Multer Storage Config ----------------
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
   filename: (req, file, cb) =>
-    cb(null, Date.now() + path.extname(file.originalname))
+    cb(null, Date.now() + path.extname(file.originalname)),
 });
+
 const upload = multer({
   storage,
-  limits: {
-    fieldSize: 10 * 1024 * 1024, // 10 MB per field
-    fileSize: 10 * 1024 * 1024   // 10 MB per file
-  }
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
 });
 
-
-// ✅ GET portfolio with full fallback
+// ---------------- GET Full Portfolio ----------------
 router.get("/", async (req, res) => {
   try {
     let portfolio = await Portfolio.findOne({});
-
     if (!portfolio) {
-      // No data → insert defaults
       portfolio = await Portfolio.create(defaultPortfolio);
       console.log("🌱 Default portfolio inserted!");
-      return res.json(portfolio);
     }
-
-    const dbData = portfolio.toObject();
-
-    // Start with defaults
-    const merged = { ...defaultPortfolio };
-
-    // Go through each key
-    for (let key in defaultPortfolio) {
-      const value = dbData[key];
-
-      if (
-        value === undefined || 
-        value === null || 
-        value === "" || 
-        (Array.isArray(value) && value.length === 0)
-      ) {
-        // Use default if empty
-        merged[key] = defaultPortfolio[key];
-      } else {
-        // Merge arrays and objects properly
-        if (Array.isArray(value)) {
-          merged[key] = value.length > 0 ? value : defaultPortfolio[key];
-        } else if (typeof value === "object" && !Array.isArray(value)) {
-          merged[key] = { ...defaultPortfolio[key], ...value };
-        } else {
-          merged[key] = value;
-        }
-      }
-    }
-
-    res.json(merged);
+    res.json(portfolio);
   } catch (err) {
     console.error("GET Error:", err);
     res.status(500).json({ error: "Failed to fetch portfolio" });
   }
 });
 
-
-// ✅ POST create/update portfolio
+// ---------------- POST Create/Update Full Portfolio ----------------
 router.post("/", upload.any(), async (req, res) => {
   try {
-    let formData = JSON.parse(req.body.header);
-    formData.skills = JSON.parse(req.body.skills);
-    formData.skills1 = JSON.parse(req.body.skills1);
-    formData.skills2 = JSON.parse(req.body.skills2);
-    formData.education = JSON.parse(req.body.education);
-    formData.experiences = JSON.parse(req.body.experiences);
-    formData.projects = JSON.parse(req.body.projects);
+    let formData = req.body;
 
-    // Attach uploaded files
+    // Parse arrays
+    ["skills", "skills1", "skills2", "education", "experiences", "projects"].forEach(
+      (field) => {
+        if (formData[field] && typeof formData[field] === "string") {
+          formData[field] = JSON.parse(formData[field]);
+        }
+      }
+    );
+
+    // Handle uploaded files
     req.files.forEach((file) => {
-      if (file.fieldname === "aboutPic") formData.aboutPic = `/uploads/${file.filename}`;
-      if (file.fieldname === "profilePic") formData.profilePic = `/uploads/${file.filename}`;
+      if (file.fieldname === "aboutPic")
+        formData.aboutPic = `/uploads/${file.filename}`;
+      if (file.fieldname === "profilePic")
+        formData.profilePic = `/uploads/${file.filename}`;
+      if (file.fieldname === "resume")
+        formData.resume = `/uploads/${file.filename}`;
+
+      // For project screenshots
       if (file.fieldname.startsWith("projects")) {
         const indexMatch = file.fieldname.match(/projects\[(\d+)\]\[screenshot\]/);
         if (indexMatch) {
@@ -94,28 +66,126 @@ router.post("/", upload.any(), async (req, res) => {
           }
         }
       }
-      if (file.fieldname === "resume") formData.resume = `/uploads/${file.filename}`;
     });
 
-    // Clear missing images
-    if (!formData.aboutPic) formData.aboutPic = "";
-    if (!formData.profilePic) formData.profilePic = "";
-    if (!formData.resume) formData.resume = "";
-    formData.projects.forEach((project) => {
-      if (!project.screenshot) project.screenshot = "";
+    const portfolio = await Portfolio.findOneAndUpdate({}, formData, {
+      new: true,
+      upsert: true,
     });
 
-    // Update MongoDB
-    const portfolio = await Portfolio.findOneAndUpdate(
-      {},
-      { ...formData },
-      { new: true, upsert: true }
-    );
-
-    res.json({ message: "Portfolio saved successfully", portfolio });
+    res.json({ message: "✅ Portfolio saved successfully", portfolio });
   } catch (err) {
     console.error("POST Error:", err);
     res.status(500).json({ error: "Failed to save portfolio" });
+  }
+});
+
+// ---------------- Individual Section Updates ----------------
+
+// Update Personal Information
+router.put("/personal", upload.fields([
+  { name: "resume" }, 
+  { name: "profilePic" }
+]), async (req, res) => {
+  try {
+    const updateData = req.body;
+
+    // file handling
+    if (req.files["resume"]) {
+      updateData.resume = `/uploads/${req.files["resume"][0].filename}`;
+    }
+    if (req.files["profilePic"]) {
+      updateData.profilePic = `/uploads/${req.files["profilePic"][0].filename}`;
+    }
+
+    const portfolio = await Portfolio.findOneAndUpdate(
+      {},
+      { $set: updateData },
+      { new: true, upsert: true }
+    );
+    res.json({ message: "✅ Personal info updated successfully", portfolio });
+  } catch (err) {
+    console.error("PUT /personal Error:", err);
+    res.status(500).json({ error: "Failed to update personal info" });
+  }
+});
+
+// Update About Section
+router.put("/about", upload.single("aboutPic"), async (req, res) => {
+  try {
+    const updateData = req.body;
+    if (req.file) {
+      updateData.aboutPic = `/uploads/${req.file.filename}`;
+    }
+
+    const portfolio = await Portfolio.findOneAndUpdate(
+      {},
+      { $set: updateData },
+      { new: true, upsert: true }
+    );
+    res.json({ message: "✅ About updated successfully", portfolio });
+  } catch (err) {
+    console.error("PUT /about Error:", err);
+    res.status(500).json({ error: "Failed to update about" });
+  }
+});
+
+// Update Education Section
+router.put("/education", async (req, res) => {
+  try {
+    const education = JSON.parse(req.body.education);
+    const portfolio = await Portfolio.findOneAndUpdate(
+      {},
+      { $set: { education } },
+      { new: true, upsert: true }
+    );
+    res.json({ message: "✅ Education updated successfully", portfolio });
+  } catch (err) {
+    console.error("PUT /education Error:", err);
+    res.status(500).json({ error: "Failed to update education" });
+  }
+});
+
+// Update Experiences Section
+router.put("/experiences", async (req, res) => {
+  try {
+    const experiences = JSON.parse(req.body.experiences);
+    const portfolio = await Portfolio.findOneAndUpdate(
+      {},
+      { $set: { experiences } },
+      { new: true, upsert: true }
+    );
+    res.json({ message: "✅ Experiences updated successfully", portfolio });
+  } catch (err) {
+    console.error("PUT /experiences Error:", err);
+    res.status(500).json({ error: "Failed to update experiences" });
+  }
+});
+
+// Update Projects Section
+router.put("/projects", upload.any(), async (req, res) => {
+  try {
+    let projects = JSON.parse(req.body.projects);
+
+    req.files.forEach((file) => {
+      const indexMatch = file.fieldname.match(/projects\[(\d+)\]\[screenshot\]/);
+      if (indexMatch) {
+        const index = parseInt(indexMatch[1], 10);
+        if (projects[index]) {
+          projects[index].screenshot = `/uploads/${file.filename}`;
+        }
+      }
+    });
+
+    const portfolio = await Portfolio.findOneAndUpdate(
+      {},
+      { $set: { projects } },
+      { new: true, upsert: true }
+    );
+    res.json({ message: "✅ Projects updated successfully", portfolio });
+  } catch (err) {
+    console.error("PUT /projects Error:", err);
+    res.status(500).json({ error: "Failed to update projects" });
   }
 });
 
