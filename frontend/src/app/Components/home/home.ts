@@ -29,7 +29,7 @@ import { Loader } from '../loader/loader';
 })
 export class Home implements OnInit, AfterViewInit {
   animate: boolean = false;
-  home: any = null;
+  header: any = null;
   loading: boolean = true;
   skills: string[] = [];
   apiUrl = 'https://portfoliomain-sbsy.onrender.com'; // ✅ Replace with your Render backend URL
@@ -66,7 +66,7 @@ export class Home implements OnInit, AfterViewInit {
     // ✅ Load portfolio data
     this.http.get(`${this.apiUrl}/`).subscribe({
       next: (data: any) => {
-        this.home = data;
+        this.header = data;
         this.skills = data.skills || [];
         this.loading = false;
       },

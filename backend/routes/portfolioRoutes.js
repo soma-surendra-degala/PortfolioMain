@@ -32,13 +32,16 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch portfolio" });
   }
 });
-
 // ---------------- POST Create/Update Full Portfolio ----------------
 router.post("/", upload.any(), async (req, res) => {
   try {
     let formData = req.body;
 
-    // Parse arrays
+    // Parse JSON strings
+    if (formData.header && typeof formData.header === "string") {
+      formData.header = JSON.parse(formData.header);
+    }
+
     ["skills", "skills1", "skills2", "education", "experiences", "projects"].forEach(
       (field) => {
         if (formData[field] && typeof formData[field] === "string") {
@@ -47,28 +50,42 @@ router.post("/", upload.any(), async (req, res) => {
       }
     );
 
+    // Get existing portfolio (for merging)
+    let existingPortfolio = await Portfolio.findOne({});
+
     // Handle uploaded files
     req.files.forEach((file) => {
       if (file.fieldname === "aboutPic")
         formData.aboutPic = `/uploads/${file.filename}`;
       if (file.fieldname === "profilePic")
-        formData.profilePic = `/uploads/${file.filename}`;
+        formData.header.profilePic = `/uploads/${file.filename}`;
       if (file.fieldname === "resume")
-        formData.resume = `/uploads/${file.filename}`;
+        formData.header.resume = `/uploads/${file.filename}`;
 
       // For project screenshots
       if (file.fieldname.startsWith("projects")) {
         const indexMatch = file.fieldname.match(/projects\[(\d+)\]\[screenshot\]/);
         if (indexMatch) {
           const index = parseInt(indexMatch[1], 10);
-          if (formData.projects[index]) {
+          if (formData.projects && formData.projects[index]) {
             formData.projects[index].screenshot = `/uploads/${file.filename}`;
           }
         }
       }
     });
 
-    const portfolio = await Portfolio.findOneAndUpdate({}, formData, {
+    // Merge with existing (so nothing gets wiped)
+    const updateData = {
+      ...existingPortfolio?._doc,
+      ...formData,
+      header: {
+        ...(existingPortfolio?.header || {}),
+        ...(formData.header || {})
+      }
+    };
+
+    // Save merged data
+    const portfolio = await Portfolio.findOneAndUpdate({}, updateData, {
       new: true,
       upsert: true,
     });
