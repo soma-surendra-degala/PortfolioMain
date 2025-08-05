@@ -3,28 +3,34 @@
 
 <!-- Main Content -->
 <div *ngIf="!loading && header">
+  
   <!-- Hero Section -->
-  <section id="home">
+  <section id="home" class="py-4">
     <div class="container hero">
       <div class="row align-items-center mb-4">
 
         <!-- Left -->
-        <div class="col-md-6 text-box text-center text-md-start p-4 fade-in fade-left" appScrollReveal>
+        <div 
+          class="col-md-6 text-box text-center text-md-start p-4 fade-in fade-left" 
+          appScrollReveal>
+          
           <h1 class="brand fw-bold" [class.animate]="animate">
-            Hello, I'm<br />
-            {{ header.firstName }} {{ header.middleName }} <br />
-            {{ header.lastName }}
+            Hello, I'm <br />
+            {{ header.firstName || '' }} {{ header.middleName || '' }} <br />
+            {{ header.lastName || '' }}
           </h1>
-          <p class="lead">{{ header.role }}</p>
+
+          <p class="lead text-muted">{{ header.role || 'Your Role Here' }}</p>
 
           <!-- Social Icons -->
-          <div class="d-flex justify-content-center justify-content-md-start my-4 gap-3">
+          <div class="d-flex flex-wrap justify-content-center justify-content-md-start my-4 gap-3">
+
             <a *ngIf="header.github" [href]="getValidUrl(header.github)" target="_blank" rel="noopener noreferrer">
-              <i class="bi bi-github text-dark fs-4 my-4 mx-2 py-2"></i>
+              <i class="bi bi-github fs-4 text-dark"></i>
             </a>
 
             <a *ngIf="header.linkedin" [href]="getValidUrl(header.linkedin)" target="_blank" rel="noopener noreferrer">
-              <i class="bi bi-linkedin text-dark fs-4 my-4 mx-2 py-2"></i>
+              <i class="bi bi-linkedin fs-4 text-dark"></i>
             </a>
 
             <button class="btn btn-dark px-4" (click)="scrollToProjects()">
@@ -34,20 +40,22 @@
         </div>
 
         <!-- Right -->
-        <div class="col-md-6 img-box mt-md-0 fade-in fade-right" appScrollReveal>
+        <div class="col-md-6 img-box mt-4 mt-md-0 fade-in fade-right" appScrollReveal>
           <div class="img-wrapper stagger" appScrollReveal>
-                <picture>
-                  <img 
-                    [src]="header?.profilePic ? (apiUrl + header.profilePic) : 'assets/default-avatar.png'"
-                    alt="{{ header?.firstName }} {{ header?.lastName }}"
-                    width="400" height="250"
-                    loading="eager"
-                    decoding="async"
-                    fetchpriority="high"
-                    class="img-fluid rounded shadow hover-zoom-img">
-                </picture>
-            <ng-container *ngIf="skills.length; else noSkills">
-              <span *ngFor="let skill of skills; let i = index"
+            <picture>
+              <img 
+                [src]="header?.profilePic ? (apiUrl + header.profilePic) : 'assets/default-avatar.png'"
+                alt="{{ header?.firstName || 'User' }} {{ header?.lastName || '' }}"
+                width="400" height="250"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+                class="img-fluid rounded shadow hover-zoom-img">
+            </picture>
+
+            <!-- Skills -->
+            <ng-container *ngIf="skills?.length! > 0; else noSkills">
+              <span *ngFor="let skill of skills; let i = index" 
                     class="tag"
                     [ngClass]="'pos' + i">
                 {{ skill }}
@@ -56,14 +64,13 @@
             <ng-template #noSkills>
               <span class="text-muted">No skills added yet</span>
             </ng-template>
-
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Scroll Down Arrows -->
+  <!-- Scroll Navigation -->
   <div class="scroll-down-arrow text-center mt-4 fade-in" appScrollReveal>
     <i class="bi bi-arrow-down" (click)="scrollToSection('about')" aria-label="Scroll Down"></i>
   </div>

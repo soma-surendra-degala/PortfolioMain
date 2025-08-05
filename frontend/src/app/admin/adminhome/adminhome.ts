@@ -75,7 +75,7 @@ export class Adminhome implements OnInit {
   constructor(private portfolioService: Portfolio) {}
 
   ngOnInit(): void {
-    this.loadHomeData();
+    
   }
 
   // Load Data
@@ -158,31 +158,110 @@ export class Adminhome implements OnInit {
 
   trackByIndex(index: number) { return index; }
 
-  // Save Data
-  onSave() {
-    const formData = new FormData();
-    formData.append('header', JSON.stringify(this.header));
-    formData.append('about', JSON.stringify(this.about));
-    formData.append('skills', JSON.stringify(this.skills));
-    formData.append('skills1', JSON.stringify(this.skills1));
-    formData.append('skills2', JSON.stringify(this.skills2));
-    formData.append('education', JSON.stringify(this.education));
-    formData.append('experiences', JSON.stringify(this.experiences));
-    formData.append('projects', JSON.stringify(this.projects.map(p => ({ ...p, screenshotFile: undefined }))));
 
-    if (this.profilePicFile) formData.append('profilePic', this.profilePicFile);
-    if (this.resumeFile) formData.append('resume', this.resumeFile);
-    if (this.aboutPicFile) formData.append('aboutPic', this.aboutPicFile);
-    this.projects.forEach((p, i) => {
-      if (p.screenshotFile) formData.append(`projectScreenshot${i}`, p.screenshotFile);
-    });
+onSave() {
+  const formData = new FormData();
 
-    this.portfolioService.savePortfolio(formData).subscribe({
-      next: () => alert('✅ Home Data saved successfully!'),
-      error: (err) => {
-        console.error('❌ Failed to save home data', err);
-        alert('❌ Failed to save home data');
-      }
-    });
-  }
+  // Personal Info
+Object.entries(this.header).forEach(([key, value]) => {
+  formData.append(key, value ? String(value) : '');
+});
+
+
+  // About Section
+  formData.append('aboutQuote', this.about.aboutQuote || '');
+  formData.append('aboutText', this.about.aboutText || '');
+  formData.append('skillsHeader1', this.about.skillsHeader1 || '');
+  formData.append('skillsHeader2', this.about.skillsHeader2 || '');
+
+  // Skills
+  formData.append('skills', JSON.stringify(this.skills));
+  formData.append('skills1', JSON.stringify(this.skills1));
+  formData.append('skills2', JSON.stringify(this.skills2));
+
+  // Education & Experiences
+  formData.append('education', JSON.stringify(this.education));
+  formData.append('experiences', JSON.stringify(this.experiences));
+
+  // Projects
+  formData.append('projects', JSON.stringify(this.projects.map(p => {
+    const proj = { ...p };
+    delete proj.screenshotFile; // remove File object before saving
+    return proj;
+  })));
+
+  // Files
+  if (this.profilePicFile) formData.append('profilePic', this.profilePicFile);
+  if (this.resumeFile) formData.append('resume', this.resumeFile);
+  if (this.aboutPicFile) formData.append('aboutPic', this.aboutPicFile);
+
+  this.projects.forEach((p, i) => {
+    if (p.screenshotFile) {
+      formData.append(`projectScreenshot${i}`, p.screenshotFile);
+    }
+  });
+
+  this.portfolioService.savePortfolio(formData).subscribe({
+    next: () => {
+      alert('✅ Home Data saved successfully!');
+      this.resetForm(); // reuse your reset method
+    },
+    error: (err) => {
+      console.error('❌ Failed to save home data', err);
+      alert('❌ Failed to save home data');
+    }
+  });
+}
+
+
+// ✅ Reset Form
+resetForm() {
+  this.header = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    role: '',
+    resume: '',
+    profilePic: '',
+    email: '',
+    linkedin: '',
+    github: '',
+    instagram: '',
+    twitter: '',
+    whatsapp: ''
+  };
+
+  this.about = {
+    aboutQuote: '',
+    aboutText: '',
+    skillsHeader1: '',
+    skillsHeader2: ''
+  };
+
+  this.skills = ['', '', '', ''];
+  this.skills1 = [''];
+  this.skills2 = [''];
+
+  this.education = [
+    { degree: '', field: '', institution: '', startYear: '', endYear: '', grade: '' }
+  ];
+
+  this.experiences = [
+    { jobTitle: '', company: '', location: '', startYear: '', endYear: '', description: '' }
+  ];
+
+  this.projects = [
+    { projectName: '', projectType: '', projectDescription: '', github: '', live: '', projectSkills: [''], screenshotPreview: '', screenshotFile: null }
+  ];
+
+  this.profilePicFile = null;
+  this.resumeFile = null;
+  this.aboutPicFile = null;
+  this.profilePicPreview = '';
+  this.aboutPicPreview = '';
+
+  // Clear file inputs
+  const fileInputs = document.querySelectorAll<HTMLInputElement>('input[type="file"]');
+  fileInputs.forEach(input => input.value = '');
+}
 }

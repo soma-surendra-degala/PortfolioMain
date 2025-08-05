@@ -31,7 +31,6 @@ export class AdminPersonal implements OnInit {
   resumeFile: File | null = null;
   skills: string[] = ['', '', '', ''];
 
-  // Social media fields
   socialLinks = [
     { key: 'email', icon: 'envelope', type: 'email', placeholder: 'your@email.com' },
     { key: 'linkedin', icon: 'linkedin', type: 'url', placeholder: 'LinkedIn URL' },
@@ -44,13 +43,13 @@ export class AdminPersonal implements OnInit {
   constructor(private portfolioService: Portfolio) {}
 
   ngOnInit(): void {
-    this.loadPersonalData();
   }
 
-  // Fetch personal data from backend
+  // ✅ Fetch data from backend
   loadPersonalData() {
     this.portfolioService.getPortfolio().subscribe({
       next: (data) => {
+        if (!data) return;
         this.header = { ...this.header, ...data };
         this.skills = data.skills && data.skills.length ? data.skills : ['', '', '', ''];
         if (data.profilePic) this.profilePicPreview = data.profilePic;
@@ -59,7 +58,7 @@ export class AdminPersonal implements OnInit {
     });
   }
 
-  // Handle File Selection
+  // ✅ Handle File Selection
   onFileSelected(event: any, type: string) {
     const file = event.target.files[0];
     if (!file) return;
@@ -69,14 +68,12 @@ export class AdminPersonal implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) => (this.profilePicPreview = e.target?.result as string);
       reader.readAsDataURL(file);
-    }
-
-    if (type === 'resume') {
+    } else if (type === 'resume') {
       this.resumeFile = file;
     }
   }
 
-  // Helpers for social links
+  // Helpers
   getValue(key: string): string {
     return this.header[key] || '';
   }
@@ -84,24 +81,64 @@ export class AdminPersonal implements OnInit {
   setValue(key: string, value: string) {
     this.header[key] = value;
   }
+onSave() {
+  const formData = new FormData();
 
-  // Save Portfolio
-  onSave() {
-    const formData = new FormData();
+  // Add JSON fields
+  formData.append('firstName', this.header.firstName || '');
+  formData.append('middleName', this.header.middleName || '');
+  formData.append('lastName', this.header.lastName || '');
+  formData.append('role', this.header.role || '');
+  formData.append('email', this.header.email || '');
+  formData.append('linkedin', this.header.linkedin || '');
+  formData.append('github', this.header.github || '');
+  formData.append('instagram', this.header.instagram || '');
+  formData.append('twitter', this.header.twitter || '');
+  formData.append('whatsapp', this.header.whatsapp || '');
+  formData.append('skills', JSON.stringify(this.skills || []));
 
-    formData.append('header', JSON.stringify(this.header));
-    formData.append('skills', JSON.stringify(this.skills));
+  // Add files if selected
+  if (this.profilePicFile) {
+    formData.append('profilePic', this.profilePicFile);
+  }
+  if (this.resumeFile) {
+    formData.append('resume', this.resumeFile);
+  }
 
-    if (this.profilePicFile) formData.append('profilePic', this.profilePicFile);
-    if (this.resumeFile) formData.append('resume', this.resumeFile);
+  this.portfolioService.savePortfolio(formData).subscribe({
+    next: () => {
+      alert('✅ Personal Data saved successfully!');
+      this.loadPersonalData();
+    },
+    error: (err) => {
+      console.error('❌ Failed to save personal', err);
+      alert('❌ Failed to save personal');
+    }
+  });
+}
 
-    this.portfolioService.savePortfolio(formData).subscribe({
-      next: () => alert('✅ Personal Data saved successfully!'),
-      error: (err) => {
-        console.error('❌ Failed to save personal', err);
-        alert('❌ Failed to save personal');
-      }
-    });
+  // ✅ Reset form
+  resetForm() {
+    this.header = {
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      role: '',
+      resume: '',
+      profilePic: '',
+      email: '',
+      linkedin: '',
+      github: '',
+      instagram: '',
+      twitter: '',
+      whatsapp: ''
+    };
+    this.skills = ['', '', '', ''];
+    this.profilePicFile = null;
+    this.resumeFile = null;
+    this.profilePicPreview = '';
+    const fileInputs = document.querySelectorAll<HTMLInputElement>('input[type="file"]');
+    fileInputs.forEach(input => input.value = '');
   }
 
   trackByIndex(index: number) {

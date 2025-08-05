@@ -15,7 +15,9 @@
 
   <div class="mb-3">
     <label class="form-label">Upload About Picture</label>
-    <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event, 'aboutPic')">
+    <input type="file" class="form-control" accept="image/*" 
+       (change)="onFileSelected($event)">
+
     <div *ngIf="aboutPicPreview" class="mt-3">
       <img [src]="aboutPicPreview" alt="About Preview" class="img-thumbnail" width="150">
     </div>

@@ -25,7 +25,7 @@ export class AdminProjects implements OnInit {
     }
   ];
 
-  isSaving: boolean = false; // loader flag
+  isSaving: boolean = false;
 
   constructor(private portfolioService: Portfolio) {}
 
@@ -36,7 +36,7 @@ export class AdminProjects implements OnInit {
   // ✅ Fetch projects from backend
   fetchProjects() {
     this.portfolioService.getPortfolio().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.projects = data.projects?.length 
           ? data.projects.map((p: any) => ({
               projectName: p.projectName || '',
@@ -44,13 +44,13 @@ export class AdminProjects implements OnInit {
               projectDescription: p.projectDescription || '',
               projectSkills: Array.isArray(p.projectSkills) ? p.projectSkills : [''],
               screenshot: null,
-              screenshotPreview: p.screenshot ? p.screenshot : '',
+              screenshotPreview: p.screenshot || '',
               github: p.github || '',
               live: p.live || ''
             }))
           : this.projects;
       },
-      error: (err) => console.error('❌ Failed to load projects', err)
+      error: (err: any) => console.error('❌ Failed to load projects', err)
     });
   }
 
@@ -82,40 +82,37 @@ export class AdminProjects implements OnInit {
   }
 
   // ✅ Handle File Selection
-  onFileSelected(event: any, type: string, index?: number) {
-    const file = event.target.files[0];
-    if (!file || type !== 'projectScreenshot' || index === undefined) return;
+onFileSelected(event: any, type: string, index?: number) {
+  const file = event.target.files[0];
+  if (!file || type !== 'projectScreenshot' || index === undefined) return;
 
-    this.projects[index].screenshot = file;
+  this.projects[index].screenshot = file;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.projects[index].screenshotPreview = e.target?.result || '';
-    };
-    reader.readAsDataURL(file);
-  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    this.projects[index].screenshotPreview = e.target?.result as string;
+  };
+  reader.readAsDataURL(file);
+}
+
 
   // ✅ Save Projects
   onSave() {
     this.isSaving = true;
     const formData = new FormData();
 
-    formData.append('projects', JSON.stringify(this.projects.map((p) => {
+    // Build JSON part
+    const projectsPayload = this.projects.map((p) => {
       const proj = { ...p };
-      if (proj.screenshot instanceof File) proj.screenshot = '';
+      delete proj.screenshot; // screenshot handled separately
       return proj;
-    })));
+    });
+    formData.append('projects', JSON.stringify(projectsPayload));
 
+    // Append screenshots separately
     this.projects.forEach((project, i) => {
       if (project.screenshot instanceof File) {
-        formData.append(`projects[${i}][screenshot]`, project.screenshot);
-      }
-    });
-
-    // Ensure live links start with https://
-    this.projects.forEach(p => {
-      if (p.live && !/^https?:\/\//i.test(p.live)) {
-        p.live = 'https://' + p.live;
+        formData.append(`screenshot_${i}`, project.screenshot);
       }
     });
 
@@ -123,13 +120,30 @@ export class AdminProjects implements OnInit {
       next: () => {
         this.isSaving = false;
         alert('✅ Projects saved successfully');
+        this.fetchProjects();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isSaving = false;
         console.error('❌ Failed to save projects', err);
         alert('❌ Failed to save projects');
       }
     });
+  }
+
+  // ✅ Reset Form
+  resetForm() {
+    this.projects = [
+      { 
+        projectName: '', 
+        projectType: '', 
+        projectDescription: '', 
+        projectSkills: [''], 
+        screenshot: null, 
+        screenshotPreview: '', 
+        github: '', 
+        live: '' 
+      }
+    ];
   }
 
   trackByIndex(index: number) { return index; }

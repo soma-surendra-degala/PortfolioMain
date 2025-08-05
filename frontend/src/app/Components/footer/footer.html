@@ -6,15 +6,16 @@
       <div class="col-md-4 mb-3 mb-md-0">
         <div class="textlogo fw-bold fs-4">
           <a (click)="logout()" style="cursor: pointer;">
-            <span class="textlogo">{{ portfolio?.middleName || "LAZY" }}</span><span class="text-accent">Dev</span>
+            <span class="textlogo">{{ portfolio?.middleName || "LAZY" }}</span>
+            <span class="text-accent">Dev</span>
           </a>
         </div>
       </div>
 
       <!-- Middle Tagline -->
       <div class="col-md-4 mb-3 mb-md-0">
-        <p class="footer-tagline mb-0 text-center fst-italic" id="footer-tagline">
-          "{{ 'Code. Create. Inspire.'}}"
+        <p class="footer-tagline mb-0 text-center fst-italic">
+          "{{ portfolio?.aboutQuote || 'Code. Create. Inspire.' }}"
         </p>
       </div>
 

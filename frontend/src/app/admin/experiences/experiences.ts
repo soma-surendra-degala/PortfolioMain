@@ -23,17 +23,22 @@ export class AdminExperiences implements OnInit {
   constructor(private portfolioService: Portfolio) {}
 
   ngOnInit(): void {
-    this.fetchData();
+    this.fetchData(); // ✅ load data on init
   }
 
   // ✅ Fetch Education & Experience from backend
   fetchData() {
     this.portfolioService.getPortfolio().subscribe({
-      next: (data) => {
-        if (data.education?.length) this.education = data.education;
-        if (data.experiences?.length) this.experiences = data.experiences;
+      next: (data: any) => {
+        this.education = data.education?.length 
+          ? data.education 
+          : [{ degree: '', field: '', institution: '', startYear: '', endYear: '', grade: '' }];
+          
+        this.experiences = data.experiences?.length 
+          ? data.experiences 
+          : [{ jobTitle: '', company: '', location: '', startYear: '', endYear: '', description: '' }];
       },
-      error: (err) => console.error('❌ Failed to load Education/Experience', err)
+      error: (err: any) => console.error('❌ Failed to load Education/Experience', err)
     });
   }
 
@@ -54,18 +59,30 @@ export class AdminExperiences implements OnInit {
   }
 
   // ✅ Save Education & Experience
-  onSave() {
-    const formData = new FormData();
-    formData.append('education', JSON.stringify(this.education));
-    formData.append('experiences', JSON.stringify(this.experiences));
+// In AdminExperiences
+onSave() {
+  const data = { experiences: this.experiences, education: this.education };
+  const formData = new FormData();
+  formData.append('experiences', JSON.stringify(this.experiences));
+  formData.append('education', JSON.stringify(this.education));
 
-    this.portfolioService.savePortfolio(formData).subscribe({
-      next: () => alert('✅ Education & Experience saved successfully'),
-      error: (err) => {
-        console.error('❌ Failed to save Education/Experience', err);
-        alert('❌ Failed to save Education/Experience');
-      }
-    });
+  this.portfolioService.savePortfolio(formData).subscribe({
+    next: () => {
+      alert('✅ Experiences updated successfully!');
+      this.fetchData();
+    },
+    error: (err) => {
+      console.error('❌ Failed to save experiences', err);
+      alert('❌ Failed to save experiences');
+    }
+  });
+}
+
+
+  // ✅ Optional Reset Form
+  resetForm() {
+    this.education = [{ degree: '', field: '', institution: '', startYear: '', endYear: '', grade: '' }];
+    this.experiences = [{ jobTitle: '', company: '', location: '', startYear: '', endYear: '', description: '' }];
   }
 
   trackByIndex(index: number) { return index; }

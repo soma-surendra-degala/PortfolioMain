@@ -23,7 +23,7 @@ export class Footer implements OnInit {
     this.http.get(this.apiUrl).subscribe({
       next: (data: any) => {
         this.portfolio = data || {};
-        const quote = this.portfolio.aboutQuote || '"Code. Create. Inspire."';
+        const quote = '"Code. Create. Inspire."';
         this.startTypewriter(quote);
       },
       error: (err) => {
