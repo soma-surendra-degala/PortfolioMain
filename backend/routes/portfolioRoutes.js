@@ -220,8 +220,6 @@
 
 // export default router;
 
-
-
 // routes/portfolioRoutes.js
 import express from "express";
 import multer from "multer";
@@ -247,9 +245,9 @@ router.get("/", async (req, res) => {
   try {
     let portfolio = await Portfolio.findOne();
 
-    // ✅ If empty DB, insert defaultPortfolio
+    // ✅ If DB empty → insert defaultPortfolio
     if (!portfolio) {
-      portfolio = await Portfolio.create(defaultPortfolio);
+      portfolio = await Portfolio.create({ ...defaultPortfolio, isDefault: true });
       console.log("🌱 Default portfolio inserted on GET");
     }
 
@@ -264,22 +262,23 @@ router.get("/", async (req, res) => {
 router.post(
   "/",
   upload.fields([
-    { name: "profilePic" },
-    { name: "aboutPic" },
-    { name: "resume" },
-    { name: "screenshots" } // handle multiple project screenshots
+    { name: "profilePic", maxCount: 1 },
+    { name: "aboutPic", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
+    { name: "screenshots" } // multiple project screenshots
   ]),
   async (req, res) => {
     try {
       let body = req.body;
 
-      // ✅ Parse JSON strings if sent
+      // ✅ Parse JSON strings safely
       for (let key of ["skills", "skills1", "skills2", "education", "experiences", "projects"]) {
         if (body[key] && typeof body[key] === "string") {
           try {
             body[key] = JSON.parse(body[key]);
-          } catch {
-            console.warn(`⚠️ Could not parse ${key}`);
+          } catch (err) {
+            console.warn(`⚠️ Could not parse ${key}:`, err.message);
+            body[key] = [];
           }
         }
       }
@@ -295,8 +294,8 @@ router.post(
         body.resume = "/uploads/" + req.files.resume[0].filename;
       }
 
-      // ✅ Attach project screenshots if uploaded
-      if (req.files?.screenshots && body.projects) {
+      // ✅ Attach project screenshots
+      if (req.files?.screenshots && Array.isArray(body.projects)) {
         body.projects = body.projects.map((proj, idx) => {
           if (req.files.screenshots[idx]) {
             proj.screenshot = "/uploads/" + req.files.screenshots[idx].filename;
@@ -308,7 +307,7 @@ router.post(
       // ✅ Save or update portfolio
       const updatedPortfolio = await Portfolio.findOneAndUpdate(
         {},
-        { $set: body },
+        { $set: { ...body, isDefault: false } }, // clear isDefault when saving real data
         { new: true, upsert: true }
       );
 
