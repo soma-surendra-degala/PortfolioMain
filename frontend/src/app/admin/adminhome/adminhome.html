@@ -1,0 +1,253 @@
+<form (ngSubmit)="onSave()" #homeForm="ngForm">
+  <!-- Personal Information -->
+  <h4 class="mb-3">Personal Information</h4>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">First Name</label>
+      <input type="text" class="form-control" [(ngModel)]="header.firstName" name="firstName" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Middle Name</label>
+      <input type="text" class="form-control" [(ngModel)]="header.middleName" name="middleName">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Last Name</label>
+      <input type="text" class="form-control" [(ngModel)]="header.lastName" name="lastName">
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <label class="form-label">Role</label>
+    <input type="text" class="form-control" [(ngModel)]="header.role" name="role" placeholder="Ex: Full Stack Developer">
+  </div>
+
+  <!-- Resume & Profile Picture -->
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <label class="form-label fw-bold">Upload Resume (PDF)</label>
+      <input type="file" class="form-control" accept="application/pdf" (change)="onFileSelected($event, 'resume')">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Profile Picture</label>
+      <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event, 'profilePic')">
+      <div *ngIf="profilePicPreview" class="mt-3">
+        <img [src]="profilePicPreview" alt="Profile Preview" class="img-thumbnail" width="150">
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Media Links -->
+  <h4 class="my-4">
+    <i class="bi bi-globe-central-south-asia-fill"></i> Social Media Links
+  </h4>
+  <div class="row g-3">
+    <div class="col-md-4" *ngFor="let field of socialLinks">
+      <label class="form-label">
+        <i class="bi bi-{{field.icon}}"></i> {{ field.key | titlecase }}
+      </label>
+      <input [type]="field.type"
+             class="form-control"
+             [ngModel]="getValue(field.key)"
+             (ngModelChange)="setValue(field.key, $event)"
+             [name]="field.key"
+             [placeholder]="field.placeholder">
+    </div>
+  </div>
+
+  <!-- Highlight Skills -->
+  <h4 class="my-4">Highlight Skills</h4>
+  <div class="row g-2">
+    <div class="col-md-3" *ngFor="let skill of skills; let i = index; trackBy: trackByIndex">
+      <input type="text"
+             class="form-control"
+             [(ngModel)]="skills[i]"
+             [name]="'skill' + i"
+             placeholder="Skill {{i+1}}">
+    </div>
+  </div>
+  <hr class="my-4">
+
+  <!-- About Section -->
+  <h4 class="mb-3">About Section</h4>
+  <div class="mb-3">
+    <label class="form-label">Quote</label>
+    <input type="text" class="form-control" [(ngModel)]="about.aboutQuote" name="aboutQuote">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">About Text</label>
+    <textarea class="form-control" [(ngModel)]="about.aboutText" name="aboutText" rows="5"></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Upload About Picture</label>
+    <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event, 'aboutPic')">
+    <div *ngIf="aboutPicPreview" class="my-3">
+      <img [src]="aboutPicPreview" alt="About Preview" class="img-thumbnail" width="150">
+    </div>
+  </div>
+
+
+  <!-- Skills Section 1 -->
+  <h4 class="mb-3">Skills Section 1</h4>
+  <div class="mb-3">
+    <label class="form-label">Skills about 1</label>
+    <input type="text" class="form-control" [(ngModel)]="about.skillsHeader1" name="skillsHeader1" placeholder="e.g., Frontend Skills">
+  </div>
+  <div *ngFor="let skill of skills1; let i = index; trackBy: trackByIndex" class="input-group mb-2">
+    <input type="text" class="form-control" [(ngModel)]="skills1[i]" name="skill1_{{i}}" placeholder="Skill {{i+1}}">
+    <button type="button" class="btn btn-dark" (click)="removeSkill1(i)" *ngIf="skills1.length > 1">✖</button>
+  </div>
+  <button type="button" class="btn btn-sm btn-dark mb-3" (click)="addSkill1()">
+    <i class="bi bi-plus-lg"></i> Add Skill
+  </button>
+
+  <!-- Skills Section 2 -->
+  <h4 class="mb-3">Skills Section 2</h4>
+  <div class="mb-3">
+    <label class="form-label">Skills about 2</label>
+    <input type="text" class="form-control" [(ngModel)]="about.skillsHeader2" name="skillsHeader2" placeholder="e.g., Backend Skills">
+  </div>
+  <div *ngFor="let skill of skills2; let j = index; trackBy: trackByIndex" class="input-group mb-2">
+    <input type="text" class="form-control" [(ngModel)]="skills2[j]" name="skill2_{{j}}" placeholder="Skill {{j+1}}">
+    <button type="button" class="btn btn-dark" (click)="removeSkill2(j)" *ngIf="skills2.length > 1">✖</button>
+  </div>
+  <button type="button" class="btn btn-sm btn-dark" (click)="addSkill2()">
+    <i class="bi bi-plus-lg"></i> Add Skill
+  </button>
+
+  <hr class="my-4">
+
+  <!-- Education Section -->
+  <h4 class="mb-3"><i class="bi bi-mortarboard-fill"></i> Education</h4>
+  <div *ngFor="let edu of education; let i = index; trackBy: trackByIndex" class="border p-3 mb-3 rounded">
+    <h5>Education {{ i + 1 }}</h5>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label>Degree</label>
+        <input type="text" class="form-control" [(ngModel)]="edu.degree" name="degree{{i}}">
+      </div>
+      <div class="col-md-6">
+        <label>Field of Study</label>
+        <input type="text" class="form-control" [(ngModel)]="edu.field" name="field{{i}}">
+      </div>
+      <div class="col-md-6">
+        <label>Institution</label>
+        <input type="text" class="form-control" [(ngModel)]="edu.institution" name="institution{{i}}">
+      </div>
+      <div class="col-md-3">
+        <label>Start Year</label>
+        <input type="text" class="form-control" [(ngModel)]="edu.startYear" name="startYear{{i}}">
+      </div>
+      <div class="col-md-3">
+        <label>End Year</label>
+        <input type="text" class="form-control" [(ngModel)]="edu.endYear" name="endYear{{i}}">
+      </div>
+      <div class="col-md-4">
+        <label>Grade / CGPA / Marks</label>
+        <input type="text" class="form-control" [(ngModel)]="edu.grade" name="grade{{i}}">
+      </div>
+    </div>
+    <button type="button" class="btn btn-dark btn-sm mt-2" (click)="removeEducation(i)" *ngIf="education.length > 1">
+      ✖ Remove
+    </button>
+  </div>
+  <button type="button" class="btn btn-dark btn-sm mb-3" (click)="addEducation()">
+    <i class="bi bi-plus-lg"></i> Add Education
+  </button>
+
+  <hr class="my-4">
+
+  <!-- Experience Section -->
+  <h4 class="mb-3"><i class="bi bi-briefcase-fill"></i> Experience</h4>
+  <div *ngFor="let exp of experiences; let i = index; trackBy: trackByIndex" class="border p-3 mb-3 rounded">
+    <h5>Experience {{ i + 1 }}</h5>
+    <div class="mb-2">
+      <label>Job Title</label>
+      <input type="text" class="form-control" [(ngModel)]="exp.jobTitle" name="jobTitle{{i}}">
+    </div>
+    <div class="mb-2">
+      <label>Company</label>
+      <input type="text" class="form-control" [(ngModel)]="exp.company" name="company{{i}}">
+    </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label>Location</label>
+        <input type="text" class="form-control" [(ngModel)]="exp.location" name="location{{i}}">
+      </div>
+      <div class="col-md-3">
+        <label>Start Year</label>
+        <input type="text" class="form-control" [(ngModel)]="exp.startYear" name="startYear{{i}}">
+      </div>
+      <div class="col-md-3">
+        <label>End Year</label>
+        <input type="text" class="form-control" [(ngModel)]="exp.endYear" name="endYear{{i}}">
+      </div>
+    </div>
+    <div class="mb-2 mt-2">
+      <label>Description</label>
+      <textarea class="form-control" [(ngModel)]="exp.description" name="description{{i}}" rows="2"></textarea>
+    </div>
+    <button type="button" class="btn btn-dark btn-sm" (click)="removeExperience(i)" *ngIf="experiences.length > 1">
+      ✖ Remove
+    </button>
+  </div>
+  <button type="button" class="btn btn-dark btn-sm mb-3" (click)="addExperience()">
+    <i class="bi bi-plus-lg"></i> Add Experience
+  </button>
+
+  <hr class="my-4">
+  
+  <!-- Projects Section -->
+  <h4 class="mb-3 d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-braces"></i> Projects</span>
+    <button type="button" class="btn btn-dark btn-sm" (click)="addProject()">
+      <i class="bi bi-plus-lg"></i> Add Project
+    </button>
+  </h4>
+  <div *ngFor="let project of projects; let i = index; trackBy: trackByIndex" class="border rounded p-3 mb-3">
+    <h5>Project {{ i + 1 }}</h5>
+    <div class="mb-3">
+      <label class="form-label">Project Name</label>
+      <input type="text" class="form-control" [(ngModel)]="project.projectName" name="projectName{{i}}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Project Type</label>
+      <input type="text" class="form-control" [(ngModel)]="project.projectType" name="projectType{{i}}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Project Description</label>
+      <textarea class="form-control" [(ngModel)]="project.projectDescription" name="projectDescription{{i}}" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Project Screenshot</label>
+      <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event, 'projectScreenshot', i)">
+      <div *ngIf="project.screenshotPreview" class="mt-3">
+        <img [src]="project.screenshotPreview" alt="Project Screenshot" class="img-thumbnail" width="200">
+      </div>
+    </div>
+    <div class="mb-3">
+      <label>GitHub Link</label>
+      <input type="url" [(ngModel)]="project.github" name="github{{i}}" class="form-control" placeholder="https://github.com/your-repo">
+    </div>
+    <div class="mb-3">
+      <label>Live Link</label>
+      <input type="url" [(ngModel)]="project.live" name="live{{i}}" class="form-control" placeholder="https://your-live-site.com">
+    </div>
+    <div *ngFor="let skill of project.projectSkills; let k = index; trackBy: trackByIndex" class="input-group mb-2">
+      <input type="text" class="form-control" [(ngModel)]="project.projectSkills[k]" name="projectSkill{{i}}{{k}}" placeholder="Skill {{k+1}}">
+      <button type="button" class="btn btn-dark" (click)="removeProjectSkill(i, k)" *ngIf="project.projectSkills.length > 1">✖</button>
+    </div>
+    <button type="button" class="btn btn-sm btn-dark mb-3" (click)="addProjectSkill(i)">
+      <i class="bi bi-plus-lg"></i> Add Project Skill
+    </button>
+    <div>
+      <button type="button" class="btn btn-dark btn-sm" (click)="removeProject(i)">✖ Remove Project</button>
+    </div>
+  </div>
+
+  <!-- Save Button -->
+  <div class="text-center mt-4">
+    <button type="submit" class="btn btn-dark px-5">
+      <i class="bi bi-bookmark-fill"></i> Save All
+    </button>
+  </div>
+</form>
