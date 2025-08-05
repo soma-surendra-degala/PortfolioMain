@@ -11,6 +11,7 @@ import { Portfolio } from '../../Services/portfolio';
   styleUrls: ['./personal.css']
 })
 export class AdminPersonal implements OnInit {
+  isLoading: boolean = false; 
   header: any = {
     firstName: '',
     middleName: '',
@@ -82,6 +83,7 @@ export class AdminPersonal implements OnInit {
     this.header[key] = value;
   }
 onSave() {
+  this.isLoading = true
   const formData = new FormData();
 
   // Add JSON fields
@@ -109,10 +111,12 @@ onSave() {
     next: () => {
       alert('✅ Personal Data saved successfully!');
       this.loadPersonalData();
+      this.isLoading = false;
     },
     error: (err) => {
       console.error('❌ Failed to save personal', err);
       alert('❌ Failed to save personal');
+      this.isLoading = false;
     }
   });
 }

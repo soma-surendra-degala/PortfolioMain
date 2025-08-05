@@ -241,22 +241,57 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ---------- Get Portfolio ----------
-router.get("/", async (req, res) => {
-  try {
-    let portfolio = await Portfolio.findOne();
+router.post(
+  "/",
+  upload.fields([
+    { name: "profilePic", maxCount: 1 },
+    { name: "aboutPic", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
+    { name: "screenshots" }
+  ]),
+  async (req, res) => {
+    try {
+      let body = req.body;
 
-    // ✅ If DB empty → insert defaultPortfolio
-    if (!portfolio) {
-      portfolio = await Portfolio.create({ ...defaultPortfolio, isDefault: true });
-      console.log("🌱 Default portfolio inserted on GET");
+      console.log("📩 Incoming Body:", body);
+      console.log("📂 Incoming Files:", req.files);
+
+      // Parse JSON fields
+      for (let key of ["skills", "skills1", "skills2", "education", "experiences", "projects"]) {
+        if (body[key] && typeof body[key] === "string") {
+          try {
+            body[key] = JSON.parse(body[key]);
+          } catch (err) {
+            console.error(`❌ JSON parse error for ${key}:`, err.message);
+            body[key] = [];
+          }
+        }
+      }
+
+      // Handle project screenshots
+      if (req.files?.screenshots && Array.isArray(body.projects)) {
+        body.projects = body.projects.map((proj, idx) => {
+          if (req.files.screenshots[idx]) {
+            proj.screenshot = "/uploads/" + req.files.screenshots[idx].filename;
+          }
+          return proj;
+        });
+      }
+
+      const updatedPortfolio = await Portfolio.findOneAndUpdate(
+        {},
+        { $set: { ...body, isDefault: false } },
+        { new: true, upsert: true }
+      );
+
+      res.json(updatedPortfolio);
+    } catch (err) {
+      console.error("❌ Failed to save portfolio:", err);
+      res.status(500).json({ error: err.message });
     }
-
-    res.json(portfolio);
-  } catch (err) {
-    console.error("❌ Failed to fetch portfolio:", err);
-    res.status(500).json({ error: "Failed to fetch portfolio" });
   }
-});
+);
+
 
 // ---------- Save / Update Portfolio ----------
 router.post(

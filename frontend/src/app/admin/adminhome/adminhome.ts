@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Portfolio } from '../../Services/portfolio';
+import { Loader } from '../../Components/loader/loader';
 
 @Component({
   selector: 'app-admin-home',
@@ -11,6 +12,7 @@ import { Portfolio } from '../../Services/portfolio';
   styleUrls: ['./adminhome.css']
 })
 export class Adminhome implements OnInit {
+   isLoading: boolean = false; 
   // Personal Info
   header: any = {
     firstName: '',
@@ -161,7 +163,7 @@ export class Adminhome implements OnInit {
 
 onSave() {
   const formData = new FormData();
-
+   this.isLoading = true;
   // Personal Info
 Object.entries(this.header).forEach(([key, value]) => {
   formData.append(key, value ? String(value) : '');
@@ -204,11 +206,13 @@ Object.entries(this.header).forEach(([key, value]) => {
   this.portfolioService.savePortfolio(formData).subscribe({
     next: () => {
       alert('✅ Home Data saved successfully!');
+      this.isLoading = false;
       this.resetForm(); // reuse your reset method
     },
     error: (err) => {
       console.error('❌ Failed to save home data', err);
       alert('❌ Failed to save home data');
+      this.isLoading=false;
     }
   });
 }

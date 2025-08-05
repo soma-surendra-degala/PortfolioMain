@@ -1,3 +1,11 @@
+<!-- Loader Overlay -->
+<div class="loader-overlay" *ngIf="isLoading">
+  <div class="loader-text text">
+    <div class="spinner-border text-light me-2" role="status"></div>
+    Saving your Projects Details, Please Wait...
+  </div>
+</div>
+
 <!-- ------------------ Projects Section ------------------ -->
 <h4 class="mb-3 d-flex justify-content-between align-items-center">
   <span><i class="bi bi-braces"></i> Projects</span>
@@ -60,9 +68,9 @@
 
 <!-- Save Button -->
 <div class="text-center mt-4">
-  <button type="button" class="btn btn-dark px-5" [disabled]="isSaving" (click)="onSave()">
+  <button type="button" class="btn btn-dark px-5" [disabled]="isLoading" (click)="onSave()">
     <i class="bi bi-bookmark-fill"></i>
-    <span *ngIf="!isSaving">Save Projects</span>
-    <span *ngIf="isSaving">Saving...</span>
+    <span *ngIf="!isLoading">Save Projects</span>
+    <span *ngIf="isLoading">Saving...</span>
   </button>
 </div>

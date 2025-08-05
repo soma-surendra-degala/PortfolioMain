@@ -1,4 +1,7 @@
 <form (ngSubmit)="onSave()" class="container py-4">
+  <div class="loader-overlay" *ngIf="isLoading">
+  <div class="loader-text text">Saving your Personal Details, Please Wait...</div>
+</div>
 
   <!-- Personal Information -->
   <h4 class="mb-3">Personal Information</h4>

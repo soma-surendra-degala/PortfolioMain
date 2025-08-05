@@ -11,6 +11,7 @@ import { Portfolio } from '../../Services/portfolio';
   styleUrls: ['./projects.css']
 })
 export class AdminProjects implements OnInit {
+  isLoading: boolean = false;
 
   projects: any[] = [
     { 
@@ -25,16 +26,15 @@ export class AdminProjects implements OnInit {
     }
   ];
 
-  isSaving: boolean = false;
-
   constructor(private portfolioService: Portfolio) {}
 
   ngOnInit(): void {
     this.fetchProjects();
   }
 
-  // ✅ Fetch projects from backend
+  // ✅ Fetch projects
   fetchProjects() {
+    this.isLoading = true;
     this.portfolioService.getPortfolio().subscribe({
       next: (data: any) => {
         this.projects = data.projects?.length 
@@ -49,12 +49,16 @@ export class AdminProjects implements OnInit {
               live: p.live || ''
             }))
           : this.projects;
+        this.isLoading = false;
       },
-      error: (err: any) => console.error('❌ Failed to load projects', err)
+      error: (err: any) => {
+        console.error('❌ Failed to load projects', err);
+        this.isLoading = false;
+      }
     });
   }
 
-  // ✅ Add & Remove Project
+  // ✅ Add project
   addProject() {
     this.projects.push({ 
       projectName: '', 
@@ -67,11 +71,13 @@ export class AdminProjects implements OnInit {
       live: '' 
     });
   }
+
+  // ✅ Remove project
   removeProject(index: number) {
     if (this.projects.length > 1) this.projects.splice(index, 1);
   }
 
-  // ✅ Add & Remove Project Skill
+  // ✅ Manage skills
   addProjectSkill(projectIndex: number) {
     this.projects[projectIndex].projectSkills.push('');
   }
@@ -81,56 +87,56 @@ export class AdminProjects implements OnInit {
     }
   }
 
-  // ✅ Handle File Selection
-onFileSelected(event: any, type: string, index?: number) {
-  const file = event.target.files[0];
-  if (!file || type !== 'projectScreenshot' || index === undefined) return;
+  // ✅ File upload
+  onFileSelected(event: any, type: string, index?: number) {
+    const file = event.target.files[0];
+    if (!file || type !== 'projectScreenshot' || index === undefined) return;
 
-  this.projects[index].screenshot = file;
+    this.projects[index].screenshot = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.projects[index].screenshotPreview = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    this.projects[index].screenshotPreview = e.target?.result as string;
-  };
-  reader.readAsDataURL(file);
-}
-
-
-  // ✅ Save Projects
+  // ✅ Save projects
   onSave() {
-    this.isSaving = true;
+    this.isLoading = true;
+
     const formData = new FormData();
 
-    // Build JSON part
+    // Build JSON part (exclude preview)
     const projectsPayload = this.projects.map((p) => {
       const proj = { ...p };
-      delete proj.screenshot; // screenshot handled separately
+      delete proj.screenshot;
+      delete proj.screenshotPreview;
       return proj;
     });
     formData.append('projects', JSON.stringify(projectsPayload));
 
-    // Append screenshots separately
+    // Append screenshots
     this.projects.forEach((project, i) => {
       if (project.screenshot instanceof File) {
-        formData.append(`screenshot_${i}`, project.screenshot);
+        formData.append('screenshots', project.screenshot);
       }
     });
 
     this.portfolioService.savePortfolio(formData).subscribe({
       next: () => {
-        this.isSaving = false;
         alert('✅ Projects saved successfully');
         this.fetchProjects();
+        this.isLoading = false;
       },
       error: (err: any) => {
-        this.isSaving = false;
         console.error('❌ Failed to save projects', err);
         alert('❌ Failed to save projects');
+        this.isLoading = false;
       }
     });
   }
 
-  // ✅ Reset Form
+  // ✅ Reset
   resetForm() {
     this.projects = [
       { 

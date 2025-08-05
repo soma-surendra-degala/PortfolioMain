@@ -1,4 +1,9 @@
 <form (ngSubmit)="onSave()" #homeForm="ngForm">
+  <!-- Full Screen Loader -->
+<div class="loader-overlay" *ngIf="isLoading">
+  <div class="loader-text text">Saving your Portfolio, Please Wait...</div>
+</div>
+
   <!-- Personal Information -->
   <h4 class="mb-3">Personal Information</h4>
   <div class="row g-3">

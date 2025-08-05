@@ -11,6 +11,7 @@ import { Portfolio } from '../../Services/portfolio';
   styleUrls: ['./experiences.css']
 })
 export class AdminExperiences implements OnInit {
+  isLoading:any =false;
 
   education: any[] = [
     { degree: '', field: '', institution: '', startYear: '', endYear: '', grade: '' }
@@ -61,6 +62,7 @@ export class AdminExperiences implements OnInit {
   // ✅ Save Education & Experience
 // In AdminExperiences
 onSave() {
+  this.isLoading = true;
   const data = { experiences: this.experiences, education: this.education };
   const formData = new FormData();
   formData.append('experiences', JSON.stringify(this.experiences));
@@ -69,10 +71,12 @@ onSave() {
   this.portfolioService.savePortfolio(formData).subscribe({
     next: () => {
       alert('✅ Experiences updated successfully!');
+      this.isLoading = false;
       this.fetchData();
     },
     error: (err) => {
       console.error('❌ Failed to save experiences', err);
+      this.isLoading = false;
       alert('❌ Failed to save experiences');
     }
   });

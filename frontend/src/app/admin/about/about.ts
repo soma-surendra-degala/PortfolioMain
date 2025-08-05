@@ -11,6 +11,7 @@ import { Portfolio } from '../../Services/portfolio';
   styleUrls: ['./about.css']
 })
 export class AdminAbout implements OnInit {
+  isLoading:boolean = false;
   about: any = {
     aboutQuote: '',
     aboutText: '',
@@ -70,6 +71,7 @@ onFileSelected(event: any) {
 
   // ✅ Save About Section
   onSave() {
+    this.isLoading=true;
     const formData = new FormData();
     formData.append('aboutQuote', this.about.aboutQuote || '');
     formData.append('aboutText', this.about.aboutText || '');
@@ -87,10 +89,12 @@ onFileSelected(event: any) {
         alert('✅ About Section saved successfully!');
         this.resetForm();       // Reset after save
         this.loadAboutData();   // Reload from backend
+        this.isLoading=false;
       },
       error: (err: any) => {
         console.error('❌ Failed to save about section', err);
         alert('❌ Failed to save about section');
+        this.isLoading=false;
       }
     });
   }

@@ -2,9 +2,12 @@
     margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'm', 'Segoe UI', sans-serif;
+  font-family: '', 'Segoe UI', sans-serif;
   box-sizing: border-box;
   scroll-behavior: smooth;
+}
+.text{
+  font-family: "Bebas Neue", sans-serif;
 }
 
 body {
