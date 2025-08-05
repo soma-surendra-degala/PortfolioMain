@@ -220,11 +220,14 @@
 
 // export default router;
 
+
+
 // routes/portfolioRoutes.js
 import express from "express";
 import multer from "multer";
 import path from "path";
 import Portfolio from "../models/portfolioModel.js";
+import defaultPortfolio from "../defaultPortfolio.js";
 
 const router = express.Router();
 
@@ -242,8 +245,14 @@ const upload = multer({ storage });
 // ---------- Get Portfolio ----------
 router.get("/", async (req, res) => {
   try {
-    const portfolio = await Portfolio.findOne();
-    if (!portfolio) return res.json({});
+    let portfolio = await Portfolio.findOne();
+
+    // ✅ If empty DB, insert defaultPortfolio
+    if (!portfolio) {
+      portfolio = await Portfolio.create(defaultPortfolio);
+      console.log("🌱 Default portfolio inserted on GET");
+    }
+
     res.json(portfolio);
   } catch (err) {
     console.error("❌ Failed to fetch portfolio:", err);
@@ -258,7 +267,7 @@ router.post(
     { name: "profilePic" },
     { name: "aboutPic" },
     { name: "resume" },
-    { name: "screenshot" },
+    { name: "screenshots" } // handle multiple project screenshots
   ]),
   async (req, res) => {
     try {
@@ -275,7 +284,7 @@ router.post(
         }
       }
 
-      // ✅ Attach file paths if uploaded
+      // ✅ Attach single file paths
       if (req.files?.profilePic) {
         body.profilePic = "/uploads/" + req.files.profilePic[0].filename;
       }
@@ -285,8 +294,15 @@ router.post(
       if (req.files?.resume) {
         body.resume = "/uploads/" + req.files.resume[0].filename;
       }
-      if (req.files?.screenshot) {
-        body.screenshot = "/uploads/" + req.files.screenshot[0].filename;
+
+      // ✅ Attach project screenshots if uploaded
+      if (req.files?.screenshots && body.projects) {
+        body.projects = body.projects.map((proj, idx) => {
+          if (req.files.screenshots[idx]) {
+            proj.screenshot = "/uploads/" + req.files.screenshots[idx].filename;
+          }
+          return proj;
+        });
       }
 
       // ✅ Save or update portfolio
