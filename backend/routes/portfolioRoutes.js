@@ -219,7 +219,6 @@
 // });
 
 // export default router;
-
 // routes/portfolioRoutes.js
 import express from "express";
 import multer from "multer";
@@ -241,73 +240,39 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ---------- Get Portfolio ----------
-router.post(
-  "/",
-  upload.fields([
-    { name: "profilePic", maxCount: 1 },
-    { name: "aboutPic", maxCount: 1 },
-    { name: "resume", maxCount: 1 },
-    { name: "screenshots" }
-  ]),
-  async (req, res) => {
-    try {
-      let body = req.body;
+router.get("/", async (req, res) => {
+  try {
+    let portfolio = await Portfolio.findOne();
 
-      console.log("📩 Incoming Body:", body);
-      console.log("📂 Incoming Files:", req.files);
-
-      // Parse JSON fields
-      for (let key of ["skills", "skills1", "skills2", "education", "experiences", "projects"]) {
-        if (body[key] && typeof body[key] === "string") {
-          try {
-            body[key] = JSON.parse(body[key]);
-          } catch (err) {
-            console.error(`❌ JSON parse error for ${key}:`, err.message);
-            body[key] = [];
-          }
-        }
-      }
-
-      // Handle project screenshots
-      if (req.files?.screenshots && Array.isArray(body.projects)) {
-        body.projects = body.projects.map((proj, idx) => {
-          if (req.files.screenshots[idx]) {
-            proj.screenshot = "/uploads/" + req.files.screenshots[idx].filename;
-          }
-          return proj;
-        });
-      }
-
-      const updatedPortfolio = await Portfolio.findOneAndUpdate(
-        {},
-        { $set: { ...body, isDefault: false } },
-        { new: true, upsert: true }
-      );
-
-      res.json(updatedPortfolio);
-    } catch (err) {
-      console.error("❌ Failed to save portfolio:", err);
-      res.status(500).json({ error: err.message });
+    // ✅ If empty DB, insert defaultPortfolio
+    if (!portfolio) {
+      portfolio = await Portfolio.create({ ...defaultPortfolio, isDefault: true });
+      console.log("🌱 Default portfolio inserted on GET");
+    } else {
+      portfolio = portfolio.toObject();
+      portfolio.isDefault = false; // ✅ mark real data
     }
-  }
-);
 
+    res.json(portfolio);
+  } catch (err) {
+    console.error("❌ Failed to fetch portfolio:", err);
+    res.status(500).json({ error: "Failed to fetch portfolio" });
+  }
+});
 
 // ---------- Save / Update Portfolio ----------
 router.post(
   "/",
-  upload.fields([
-    { name: "profilePic", maxCount: 1 },
-    { name: "aboutPic", maxCount: 1 },
-    { name: "resume", maxCount: 1 },
-    { name: "screenshots" } // multiple project screenshots
-  ]),
+  upload.any(), // accept any files
   async (req, res) => {
     try {
       let body = req.body;
 
-      // ✅ Parse JSON strings safely
-      for (let key of ["skills", "skills1", "skills2", "education", "experiences", "projects"]) {
+      // ✅ Parse arrays safely
+      for (let key of [
+        "skills", "skills1", "skills2", 
+        "education", "experiences", "projects"
+      ]) {
         if (body[key] && typeof body[key] === "string") {
           try {
             body[key] = JSON.parse(body[key]);
@@ -318,22 +283,31 @@ router.post(
         }
       }
 
-      // ✅ Attach single file paths
-      if (req.files?.profilePic) {
-        body.profilePic = "/uploads/" + req.files.profilePic[0].filename;
-      }
-      if (req.files?.aboutPic) {
-        body.aboutPic = "/uploads/" + req.files.aboutPic[0].filename;
-      }
-      if (req.files?.resume) {
-        body.resume = "/uploads/" + req.files.resume[0].filename;
+      // ✅ Attach main files
+      const fileMap = {};
+      if (req.files?.length) {
+        req.files.forEach((file) => {
+          fileMap[file.fieldname] = file.filename;
+        });
       }
 
-      // ✅ Attach project screenshots
-      if (req.files?.screenshots && Array.isArray(body.projects)) {
+      // Resume & Pics
+      if (fileMap.resume) {
+        body.resume = "/uploads/" + fileMap.resume;
+      }
+      if (fileMap.profilePic) {
+        body.profilePic = "/uploads/" + fileMap.profilePic;
+      }
+      if (fileMap.aboutPic) {
+        body.aboutPic = "/uploads/" + fileMap.aboutPic;
+      }
+
+      // ✅ Handle project screenshots
+      if (Array.isArray(body.projects)) {
         body.projects = body.projects.map((proj, idx) => {
-          if (req.files.screenshots[idx]) {
-            proj.screenshot = "/uploads/" + req.files.screenshots[idx].filename;
+          const fileKey = `screenshot_${idx}`;
+          if (fileMap[fileKey]) {
+            proj.screenshot = "/uploads/" + fileMap[fileKey];
           }
           return proj;
         });
@@ -342,7 +316,7 @@ router.post(
       // ✅ Save or update portfolio
       const updatedPortfolio = await Portfolio.findOneAndUpdate(
         {},
-        { $set: { ...body, isDefault: false } }, // clear isDefault when saving real data
+        { $set: { ...body, isDefault: false } },
         { new: true, upsert: true }
       );
 
