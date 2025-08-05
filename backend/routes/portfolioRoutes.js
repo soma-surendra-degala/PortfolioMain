@@ -1,7 +1,6 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 import Portfolio from "../models/portfolioModel.js";
 import defaultPortfolio from "../defaultPortfolio.js";
 
@@ -19,17 +18,6 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
 });
 
-// Helper: delete old file
-const deleteOldFile = (filePath) => {
-  if (filePath && filePath.startsWith("/uploads/")) {
-    const localPath = path.join(process.cwd(), filePath);
-    fs.unlink(localPath, (err) => {
-      if (err) console.warn("⚠️ Could not delete old file:", localPath);
-      else console.log("🗑️ Deleted old file:", localPath);
-    });
-  }
-};
-
 // ---------------- GET Full Portfolio ----------------
 router.get("/", async (req, res) => {
   try {
@@ -45,13 +33,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ---------------- POST Create/Update Full Home Portfolio ----------------
+// ---------------- POST Create/Update Full Portfolio ----------------
 router.post("/", upload.any(), async (req, res) => {
   try {
     let formData = req.body;
 
-    // Parse JSON fields from FormData
-    ["header", "about", "skills", "skills1", "skills2", "education", "experiences", "projects"].forEach(
+    // Parse arrays
+    ["skills", "skills1", "skills2", "education", "experiences", "projects"].forEach(
       (field) => {
         if (formData[field] && typeof formData[field] === "string") {
           formData[field] = JSON.parse(formData[field]);
@@ -59,52 +47,33 @@ router.post("/", upload.any(), async (req, res) => {
       }
     );
 
-    // Fetch current portfolio for file cleanup
-    const existingPortfolio = await Portfolio.findOne({});
-
-    // File Handling
+    // Handle uploaded files
     req.files.forEach((file) => {
-      if (file.fieldname === "profilePic") {
-        // delete old profilePic
-        if (existingPortfolio?.header?.profilePic) {
-          deleteOldFile(existingPortfolio.header.profilePic);
-        }
-        formData.header.profilePic = `/uploads/${file.filename}`;
-      }
-      if (file.fieldname === "resume") {
-        if (existingPortfolio?.header?.resume) {
-          deleteOldFile(existingPortfolio.header.resume);
-        }
-        formData.header.resume = `/uploads/${file.filename}`;
-      }
-      if (file.fieldname === "aboutPic") {
-        if (existingPortfolio?.about?.aboutPic) {
-          deleteOldFile(existingPortfolio.about.aboutPic);
-        }
-        formData.about.aboutPic = `/uploads/${file.filename}`;
-      }
+      if (file.fieldname === "aboutPic")
+        formData.aboutPic = `/uploads/${file.filename}`;
+      if (file.fieldname === "profilePic")
+        formData.profilePic = `/uploads/${file.filename}`;
+      if (file.fieldname === "resume")
+        formData.resume = `/uploads/${file.filename}`;
 
-      // Project Screenshots
-      const projectMatch = file.fieldname.match(/^projectScreenshot(\d+)$/);
-      if (projectMatch) {
-        const index = parseInt(projectMatch[1], 10);
-        if (formData.projects && formData.projects[index]) {
-          // delete old screenshot
-          if (existingPortfolio?.projects?.[index]?.screenshot) {
-            deleteOldFile(existingPortfolio.projects[index].screenshot);
+      // For project screenshots
+      if (file.fieldname.startsWith("projects")) {
+        const indexMatch = file.fieldname.match(/projects\[(\d+)\]\[screenshot\]/);
+        if (indexMatch) {
+          const index = parseInt(indexMatch[1], 10);
+          if (formData.projects[index]) {
+            formData.projects[index].screenshot = `/uploads/${file.filename}`;
           }
-          formData.projects[index].screenshot = `/uploads/${file.filename}`;
         }
       }
     });
 
-    // Save/Update Portfolio
     const portfolio = await Portfolio.findOneAndUpdate({}, formData, {
       new: true,
       upsert: true,
     });
 
-    res.json({ message: "✅ Home Portfolio saved successfully", portfolio });
+    res.json({ message: "✅ Portfolio saved successfully", portfolio });
   } catch (err) {
     console.error("POST Error:", err);
     res.status(500).json({ error: "Failed to save portfolio" });
